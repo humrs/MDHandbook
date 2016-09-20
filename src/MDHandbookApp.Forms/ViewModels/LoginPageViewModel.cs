@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Logging;
@@ -28,35 +29,38 @@ namespace MDHandbookApp.Forms.ViewModels
         public DelegateCommand LoginMicrosoft { get; set; }
         public DelegateCommand LoginTwitter { get; set; }
         
-
         public LoginPageViewModel(
             ILogService logService,
             INavigationService navigationService) : base(logService, navigationService)
         {
-            LoginGoogle = new DelegateCommand(loginGoogle);
-            LoginFacebook = new DelegateCommand(loginFacebook);
-            LoginMicrosoft = new DelegateCommand(loginMicrosoft);
-            LoginTwitter = new DelegateCommand(loginTwitter);
+            LoginGoogle =    DelegateCommand.FromAsyncHandler(loginGoogle);
+            LoginFacebook =  DelegateCommand.FromAsyncHandler(loginFacebook);
+            LoginMicrosoft = DelegateCommand.FromAsyncHandler(loginMicrosoft);
+            LoginTwitter =   DelegateCommand.FromAsyncHandler(loginTwitter);
         }
 
-        private void loginTwitter()
+        private async Task loginTwitter()
         {
             _logService.Log("Login Twitter", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        private void loginMicrosoft()
+        private async Task loginMicrosoft()
         {
             _logService.Log("Login Microsoft", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        private void loginFacebook()
+        private async Task loginFacebook()
         {
             _logService.Log("Login Facebook", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        private void loginGoogle()
+        private async Task loginGoogle()
         {
             _logService.Log("Login Google", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
     }
 }

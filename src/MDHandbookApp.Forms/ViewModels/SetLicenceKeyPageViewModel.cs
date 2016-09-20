@@ -16,36 +16,27 @@
 
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
-using Prism.Mvvm;
+using Prism.Commands;
+using Prism.Logging;
 using Prism.Navigation;
-
 
 namespace MDHandbookApp.Forms.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware
+    public class SetLicenceKeyPageViewModel : ViewModelBase
     {
-        protected ILogService _logService;
-        protected INavigationService _navigationService;
-
-        public ViewModelBase(
+        public DelegateCommand SetLicenceKey { get; set; }
+        
+        public SetLicenceKeyPageViewModel(
             ILogService logService,
-            INavigationService navigationService)
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _logService = logService;
-            _navigationService = navigationService;
+            SetLicenceKey = DelegateCommand.FromAsyncHandler(setLicenceKey);
         }
 
-        protected virtual async Task navigateToMainPage()
+        private async Task setLicenceKey()
         {
-            await _navigationService.NavigateAsync(Constants.MainPageAbsUrl, animated: false);
-        }
-
-        public virtual void OnNavigatedFrom(NavigationParameters parameters)
-        {
-        }
-
-        public virtual void OnNavigatedTo(NavigationParameters parameters)
-        {
+            _logService.Log("Set Licence Key", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
     }
 }

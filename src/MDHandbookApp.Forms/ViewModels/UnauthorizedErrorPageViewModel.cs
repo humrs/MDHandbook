@@ -35,7 +35,7 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task navigateToLoginPage()
         {
-            await _navigationService.NavigateAsync("/MenuPage/NavPage/LoginPage", animated: false);
+            await _navigationService.NavigateAsync(Constants.LoginPageAbsUrl, animated: false);
         }
     }
 }

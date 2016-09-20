@@ -8,6 +8,6 @@
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text="Please enter your licence key." />
     <Entry Placeholder="Licence Key" />
-    <Button Text="Set Licence Key" />
+    <Button Text="Set Licence Key" Command="{Binding SetLicenceKey}" />
   </StackLayout>
 </ContentPage>

@@ -90,12 +90,12 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task navigateToSetLicenceKeyPage()
         {
-            await _navigationService.NavigateAsync("/MenuPage/NavPage/SetLicenceKeyPage");
+            await _navigationService.NavigateAsync(Constants.SetLicenceKeyPageAbsUrl);
         }
 
         private async Task navigateToLoginPage()
         {
-            await _navigationService.NavigateAsync("/MenuPage/NavPage/LoginPage");
+            await _navigationService.NavigateAsync(Constants.LoginPageAbsUrl);
         }
 
         private void toggleBusy()

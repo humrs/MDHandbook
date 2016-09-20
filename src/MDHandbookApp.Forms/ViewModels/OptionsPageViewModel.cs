@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Logging;
@@ -67,9 +68,9 @@ namespace MDHandbookApp.Forms.ViewModels
         {
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
 
-            Logout = new DelegateCommand(logout);
-            ResetLicenceKey = new DelegateCommand(resetLicenceKey);
-            RefreshContents = new DelegateCommand(refreshContents);
+            Logout = DelegateCommand.FromAsyncHandler(logout);
+            ResetLicenceKey = DelegateCommand.FromAsyncHandler(resetLicenceKey);
+            RefreshContents = DelegateCommand.FromAsyncHandler(refreshContents);
 
 #if DEBUG
             ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
@@ -81,20 +82,22 @@ namespace MDHandbookApp.Forms.ViewModels
             updateShowFunctions();
         }
 
-        private void refreshContents()
+        private async Task refreshContents()
         {
             _logService.Log("Refresh Contents", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        private void resetLicenceKey()
+        private async Task resetLicenceKey()
         {
             _logService.Log("Reset Licence Key", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        private void logout()
+        private async Task logout()
         {
             _logService.Log("Logout", Category.Debug, Priority.Low);
-            
+            await navigateToMainPage();            
         }
 
 

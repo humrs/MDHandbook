@@ -15,6 +15,7 @@
 //
 
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.ViewModels;
 using MDHandbookApp.Forms.Views;
 using Microsoft.Practices.Unity;
 using Prism.Navigation;
@@ -28,7 +29,7 @@ namespace MDHandbookApp.Forms
     {
         public void OnInitializedNavigation(INavigationService _nav)
         {
-            _nav.NavigateAsync("/MenuPage/NavPage/MainPage", animated: false);
+            _nav.NavigateAsync(Constants.MainPageAbsUrl, animated: false);
         }
 
         public void RegisterTypes(IUnityContainer _container)

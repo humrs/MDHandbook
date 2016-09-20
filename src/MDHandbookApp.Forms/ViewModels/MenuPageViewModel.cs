@@ -74,7 +74,7 @@ namespace MDHandbookApp.Forms.ViewModels
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
             NavigateToOptionsPage = DelegateCommand.FromAsyncHandler(navigateToOptionsPage);
             NavigateToPrivacyPage = DelegateCommand.FromAsyncHandler(navigateToPrivacyPage);
-            NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToLicenceKeyPage);
+            NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
 
             NavigateToLicenceErrorPage = DelegateCommand.FromAsyncHandler(navigateToLicenceErrorPage);
             NavigateToUnauthorizedErrorPage = DelegateCommand.FromAsyncHandler(navigateToUnauthorizedErrorPage);
@@ -89,37 +89,37 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task navigateToUnauthorizedErrorPage()
         {
-            await _navigationService.NavigateAsync("NavPage/UnauthorizedErrorPage");
+            await _navigationService.NavigateAsync(Constants.UnauthorizedErrorPageRelUrl);
         }
 
-        private async Task navigateToLicenceKeyPage()
+        private async Task navigateToSetLicenceKeyPage()
         {
-            await _navigationService.NavigateAsync("NavPage/SetLicenceKeyPage");
+            await _navigationService.NavigateAsync(Constants.SetLicenceKeyPageRelUrl);
         }
 
         private async Task navigateToPrivacyPage()
         {
-            await _navigationService.NavigateAsync("NavPage/PrivacyPage");
+            await _navigationService.NavigateAsync(Constants.PrivacyPageRelUrl);
         }
 
         private async Task navigateToOptionsPage()
         {
-            await _navigationService.NavigateAsync("NavPage/OptionsPage");
+            await _navigationService.NavigateAsync(Constants.OptionsPageRelUrl);
         }
 
         private async Task navigateToLoginPage()
         {
-            await _navigationService.NavigateAsync("NavPage/LoginPage");
+            await _navigationService.NavigateAsync(Constants.LoginPageRelUrl);
         }
 
         private async Task navigateToLicenceErrorPage()
         {
-            await _navigationService.NavigateAsync("NavPage/LicenceErrorPage");
+            await _navigationService.NavigateAsync(Constants.LicenceErrorPageRelUrl);
         }
 
         private async Task navigateToAboutPage()
         {
-            await _navigationService.NavigateAsync("NavPage/AboutPage");
+            await _navigationService.NavigateAsync(Constants.AboutPageRelUrl);
         }
 
         private void toggleLicenced()
