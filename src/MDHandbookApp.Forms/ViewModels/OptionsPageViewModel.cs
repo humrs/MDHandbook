@@ -18,7 +18,7 @@ using Prism.Commands;
 using Prism.Navigation;
 
 
-namespace UniHandbookApp.Forms.ViewModels
+namespace MDHandbookApp.Forms.ViewModels
 {
     public class OptionsPageViewModel : ViewModelBase
     {

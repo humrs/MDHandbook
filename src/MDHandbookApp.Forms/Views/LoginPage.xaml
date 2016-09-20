@@ -7,9 +7,9 @@
              Title="Login">
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text ="Login with one of the following providers." />
-    <Button Text="Google" />
-    <Button Text="Facebook" />
-    <Button Text="Microsoft" />
-    <Button Text="Twitter" Command="{Binding LoginTwitter}" />
+    <Button Text="Google"    Command="{Binding LoginGoogle}" />
+    <Button Text="Facebook"  Command="{Binding LoginFacebook}"/>
+    <Button Text="Microsoft" Command="{Binding LoginMicrosoft}"/>
+    <Button Text="Twitter"   Command="{Binding LoginTwitter}" />
   </StackLayout>
 </ContentPage>

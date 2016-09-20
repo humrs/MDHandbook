@@ -18,7 +18,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 
 
-namespace UniHandbookApp.Forms.ViewModels
+namespace MDHandbookApp.Forms.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigationAware
     {
