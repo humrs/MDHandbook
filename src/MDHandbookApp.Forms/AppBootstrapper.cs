@@ -20,7 +20,6 @@ using MDHandbookApp.Forms.Views;
 using Microsoft.Practices.Unity;
 using Prism.Navigation;
 using Prism.Unity;
-using Splat;
 
 
 namespace MDHandbookApp.Forms

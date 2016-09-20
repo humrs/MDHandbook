@@ -14,7 +14,6 @@
 //    limitations under the License.
 //
 
-using System;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;

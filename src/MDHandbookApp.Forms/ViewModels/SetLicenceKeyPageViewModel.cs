@@ -20,6 +20,7 @@ using Prism.Commands;
 using Prism.Logging;
 using Prism.Navigation;
 
+
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class SetLicenceKeyPageViewModel : ViewModelBase
