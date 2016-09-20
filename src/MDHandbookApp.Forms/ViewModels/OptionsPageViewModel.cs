@@ -25,18 +25,15 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class OptionsPageViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
-        private ILogService _logService;
 
 #if DEBUG
         private bool _loggedIn = false;
         private bool _licenced = false;
 #endif
-
-        public DelegateCommand<string> NavigateCommand { get; set; }
-        public DelegateCommand         Logout { get; set; }
-        public DelegateCommand         ResetLicenceKey { get; set; }
-        public DelegateCommand         RefreshContents { get; set; }
+        public DelegateCommand NavigateToMainPage { get; set; }
+        public DelegateCommand Logout { get; set; }
+        public DelegateCommand ResetLicenceKey { get; set; }
+        public DelegateCommand RefreshContents { get; set; }
 
 #if DEBUG
         public DelegateCommand ToggleLoggedIn { get; set; }
@@ -65,13 +62,10 @@ namespace MDHandbookApp.Forms.ViewModels
         }
         
         public OptionsPageViewModel(
-            INavigationService navigationService,
-            ILogService logService)
+            ILogService logService,
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _navigationService = navigationService;
-            _logService = logService;
-
-            NavigateCommand = new DelegateCommand<string>(navigate);
+            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
 
             Logout = new DelegateCommand(logout);
             ResetLicenceKey = new DelegateCommand(resetLicenceKey);
@@ -100,11 +94,7 @@ namespace MDHandbookApp.Forms.ViewModels
         private void logout()
         {
             _logService.Log("Logout", Category.Debug, Priority.Low);
-        }
-
-        private void navigate(string name)
-        {
-            _navigationService.NavigateAsync(name);
+            
         }
 
 

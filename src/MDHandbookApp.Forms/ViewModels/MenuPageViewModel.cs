@@ -14,7 +14,11 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Threading.Tasks;
+using MDHandbookApp.Forms.Services;
 using Prism.Commands;
+using Prism.Logging;
 using Prism.Navigation;
 
 
@@ -22,13 +26,23 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class MenuPageViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
         private bool _loggedIn = false;
         private bool _licenced = false;
-        public DelegateCommand<string> NavigateCommand { get; set; }
+
+        public DelegateCommand NavigateToAboutPage { get; set; }
+        public DelegateCommand NavigateToPrivacyPage { get; set; }
+        public DelegateCommand NavigateToLoginPage { get; set; }
+        public DelegateCommand NavigateToMainPage { get; set; }
+        public DelegateCommand NavigateToSetLicenceKeyPage { get; set; }
+        public DelegateCommand NavigateToOptionsPage { get; set; }
+
+#if DEBUG
+        public DelegateCommand NavigateToLicenceErrorPage { get; set; }
+        public DelegateCommand NavigateToUnauthorizedErrorPage { get; set; }
 
         public DelegateCommand ToggleLoggedIn { get; set; }
         public DelegateCommand ToggleLicenced { get; set; }
+#endif
 
         private bool _showLogin = true;
         public bool ShowLogin
@@ -51,10 +65,20 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showOptions, value); }
         }
         
-        public MenuPageViewModel(INavigationService navigationService)
+        public MenuPageViewModel(
+            ILogService logService,
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _navigationService = navigationService;
-            NavigateCommand = new DelegateCommand<string>(Navigate);
+            NavigateToAboutPage = DelegateCommand.FromAsyncHandler(navigateToAboutPage);
+            NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
+            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
+            NavigateToOptionsPage = DelegateCommand.FromAsyncHandler(navigateToOptionsPage);
+            NavigateToPrivacyPage = DelegateCommand.FromAsyncHandler(navigateToPrivacyPage);
+            NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToLicenceKeyPage);
+
+            NavigateToLicenceErrorPage = DelegateCommand.FromAsyncHandler(navigateToLicenceErrorPage);
+            NavigateToUnauthorizedErrorPage = DelegateCommand.FromAsyncHandler(navigateToUnauthorizedErrorPage);
+
             ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
             ToggleLicenced = new DelegateCommand(toggleLicenced);
 
@@ -63,15 +87,45 @@ namespace MDHandbookApp.Forms.ViewModels
             updateShowFunctions();
         }
 
+        private async Task navigateToUnauthorizedErrorPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/UnauthorizedErrorPage");
+        }
+
+        private async Task navigateToLicenceKeyPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/SetLicenceKeyPage");
+        }
+
+        private async Task navigateToPrivacyPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/PrivacyPage");
+        }
+
+        private async Task navigateToOptionsPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/OptionsPage");
+        }
+
+        private async Task navigateToLoginPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/LoginPage");
+        }
+
+        private async Task navigateToLicenceErrorPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/LicenceErrorPage");
+        }
+
+        private async Task navigateToAboutPage()
+        {
+            await _navigationService.NavigateAsync("NavPage/AboutPage");
+        }
+
         private void toggleLicenced()
         {
             _licenced = !_licenced;
             updateShowFunctions();
-        }
-
-        private void Navigate(string name)
-        {
-            _navigationService.NavigateAsync(name);
         }
 
         private void toggleLoggedIn()

@@ -16,36 +16,26 @@
 
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
-using Prism.Mvvm;
+using Prism.Commands;
 using Prism.Navigation;
 
 
 namespace MDHandbookApp.Forms.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware
+    public class UnauthorizedErrorPageViewModel : ViewModelBase
     {
-        protected ILogService _logService;
-        protected INavigationService _navigationService;
+        public DelegateCommand NavigateToLoginPage { get; set; }
 
-        public ViewModelBase(
+        public UnauthorizedErrorPageViewModel(
             ILogService logService,
-            INavigationService navigationService)
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _logService = logService;
-            _navigationService = navigationService;
+            NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
         }
 
-        protected virtual async Task navigateToMainPage()
+        private async Task navigateToLoginPage()
         {
-            await _navigationService.NavigateAsync("/MenuPage/NavPage/MainPage", animated: false);
-        }
-
-        public virtual void OnNavigatedFrom(NavigationParameters parameters)
-        {
-        }
-
-        public virtual void OnNavigatedTo(NavigationParameters parameters)
-        {
+            await _navigationService.NavigateAsync("/MenuPage/NavPage/LoginPage", animated: false);
         }
     }
 }

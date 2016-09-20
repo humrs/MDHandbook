@@ -14,6 +14,9 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Threading.Tasks;
+using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -22,12 +25,13 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
+
         private bool _loggedIn = false;
         private bool _licenced = false;
         private bool _busy = false;
 
-        public DelegateCommand<string> NavigateCommand { get; set; }
+        public DelegateCommand NavigateToLoginPage { get; set; }
+        public DelegateCommand NavigateToSetLicenceKeyPage { get; set; }
 
         public DelegateCommand ToggleLoggedIn { get; set; }
         public DelegateCommand ToggleLicenced { get; set; }
@@ -68,10 +72,12 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showBookList, value); }
         }
         
-        public MainPageViewModel(INavigationService navigationService)
+        public MainPageViewModel(
+            ILogService logService,
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _navigationService = navigationService;
-            NavigateCommand = new DelegateCommand<string>(Navigate);
+            NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
+            NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
 
             ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
             ToggleLicenced = new DelegateCommand(toggleLicenced);
@@ -80,6 +86,16 @@ namespace MDHandbookApp.Forms.ViewModels
             _loggedIn = false;
             _licenced = false;
             updateShowFunctions();
+        }
+
+        private async Task navigateToSetLicenceKeyPage()
+        {
+            await _navigationService.NavigateAsync("/MenuPage/NavPage/SetLicenceKeyPage");
+        }
+
+        private async Task navigateToLoginPage()
+        {
+            await _navigationService.NavigateAsync("/MenuPage/NavPage/LoginPage");
         }
 
         private void toggleBusy()
@@ -92,11 +108,6 @@ namespace MDHandbookApp.Forms.ViewModels
         {
             _licenced = !_licenced;
             updateShowFunctions();
-        }
-
-        private void Navigate(string name)
-        {
-            _navigationService.NavigateAsync(name);
         }
 
         private void toggleLoggedIn()

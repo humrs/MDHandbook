@@ -41,6 +41,8 @@
     <Compile Include="Services\CustomDebugLogger.cs" />
     <Compile Include="Services\FullDebugLogService.cs" />
     <Compile Include="Services\ILogService.cs" />
+    <Compile Include="ViewModels\UnauthorizedErrorPageViewModel.cs" />
+    <Compile Include="ViewModels\LicenceErrorPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MenuPageViewModel.cs" />

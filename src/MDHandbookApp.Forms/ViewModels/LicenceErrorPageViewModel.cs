@@ -16,36 +16,40 @@
 
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
-using Prism.Mvvm;
+using Prism.Commands;
+using Prism.Logging;
 using Prism.Navigation;
 
 
 namespace MDHandbookApp.Forms.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware
+    public class LicenceErrorPageViewModel : ViewModelBase
     {
-        protected ILogService _logService;
-        protected INavigationService _navigationService;
-
-        public ViewModelBase(
+        public DelegateCommand Logout { get; set; }
+        public DelegateCommand ResetLicenceKey { get; set; }
+        
+        public LicenceErrorPageViewModel(
             ILogService logService,
-            INavigationService navigationService)
+            INavigationService navigationService) : base(logService, navigationService)
         {
-            _logService = logService;
-            _navigationService = navigationService;
+            Logout = DelegateCommand.FromAsyncHandler(logout);
+            ResetLicenceKey = DelegateCommand.FromAsyncHandler(resetLicenceKey);
         }
 
-        protected virtual async Task navigateToMainPage()
+        private async Task logout()
         {
-            await _navigationService.NavigateAsync("/MenuPage/NavPage/MainPage", animated: false);
+            _logService.Log("Logout", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        public virtual void OnNavigatedFrom(NavigationParameters parameters)
+        private async Task resetLicenceKey()
         {
+            _logService.Log("Reset Licence Key", Category.Debug, Priority.Low);
+            await navigateToMainPage();
         }
 
-        public virtual void OnNavigatedTo(NavigationParameters parameters)
-        {
-        }
+
+
+
     }
 }

@@ -8,14 +8,16 @@
     <ContentPage Title="Default" Padding="10">
       <StackLayout>
         <Label Text="Menu" />
-        <Button Text="About"            Command="{Binding NavigateCommand}" CommandParameter="NavPage/AboutPage" />
-        <Button Text="Privacy"          Command="{Binding NavigateCommand}" CommandParameter="NavPage/PrivacyPage" />
-        <Button Text="Login"            Command="{Binding NavigateCommand}" CommandParameter="NavPage/LoginPage" IsVisible="{Binding ShowLogin}"/>
-        <Button Text="MainPage"         Command="{Binding NavigateCommand}" CommandParameter="NavPage/MainPage" />
-        <Button Text="Set Licence Key"  Command="{Binding NavigateCommand}" CommandParameter="NavPage/SetLicenceKeyPage" IsVisible="{Binding ShowSetLicenceKey}"/>
-        <Button Text="Options"          Command="{Binding NavigateCommand}" CommandParameter="NavPage/OptionsPage" IsVisible="{Binding ShowOptions}"/>
+        <Button Text="About"            Command="{Binding NavigateToAboutPage}" />
+        <Button Text="Privacy"          Command="{Binding NavigateToPrivacyPage}" />
+        <Button Text="Login"            Command="{Binding NavigateToLoginPage}" IsVisible="{Binding ShowLogin}"/>
+        <Button Text="MainPage"         Command="{Binding NavigateToMainPage}" />
+        <Button Text="Set Licence Key"  Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding ShowSetLicenceKey}"/>
+        <Button Text="Options"          Command="{Binding NavigateToOptionsPage}" IsVisible="{Binding ShowOptions}"/>
         <Button Text="ToggleLoggedIn"   Command="{Binding ToggleLoggedIn}" />
         <Button Text="ToggleLicenced"   Command="{Binding ToggleLicenced}" />
+        <Button Text="DisplayLicenceError" Command="{Binding NavigateToLicenceErrorPage}" />
+        <Button Text="DisplayUnauthorized" Command="{Binding NavigateToUnauthorizedErrorPage}" />
       </StackLayout>
     </ContentPage>
   </MasterDetailPage.Master>

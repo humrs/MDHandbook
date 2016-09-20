@@ -20,8 +20,8 @@
     <Label FontSize="Medium" IsVisible="{Binding ShowNotLicencedMessage}">
       You are logged in but you have not set a valid Licence Key.
     </Label>
-    <Button Text="Login" IsVisible="{Binding ShowNotLoggedInMessage}"/>
-    <Button Text="Set Licence Key" IsVisible="{Binding ShowNotLicencedMessage}"/>
+    <Button Text="Login" Command="{Binding NavigateToLoginPage}" IsVisible="{Binding ShowNotLoggedInMessage}"/>
+    <Button Text="Set Licence Key" Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding ShowNotLicencedMessage}"/>
     <ListView x:Name="bookList" SeparatorVisibility="None" IsVisible="{Binding ShowBookList}">
       <ListView.ItemTemplate>
         <DataTemplate>

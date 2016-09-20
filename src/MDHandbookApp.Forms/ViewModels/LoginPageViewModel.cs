@@ -17,22 +17,22 @@
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Logging;
+using Prism.Navigation;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
-        private ILogService _logService;
-
         public DelegateCommand LoginGoogle { get; set; }
         public DelegateCommand LoginFacebook { get; set; }
         public DelegateCommand LoginMicrosoft { get; set; }
         public DelegateCommand LoginTwitter { get; set; }
         
-        public LoginPageViewModel(ILogService logService)
-        {
-            _logService = logService;
 
+        public LoginPageViewModel(
+            ILogService logService,
+            INavigationService navigationService) : base(logService, navigationService)
+        {
             LoginGoogle = new DelegateCommand(loginGoogle);
             LoginFacebook = new DelegateCommand(loginFacebook);
             LoginMicrosoft = new DelegateCommand(loginMicrosoft);
