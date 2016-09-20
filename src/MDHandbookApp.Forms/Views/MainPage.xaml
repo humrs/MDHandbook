@@ -4,8 +4,32 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MDHandbookApp.Forms.Views.MainPage"
-             Title="MainPage">
-  <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-    <Label Text="{Binding Title}" />
+             Title="Main Page">
+  <StackLayout Margin="20" Spacing="10">
+    <Label Text="placeholder for updateTime" x:Name="updateTime" FontSize="Micro" TextColor="Blue" />
+    <Label FontSize="Large" TextColor="Blue" HorizontalTextAlignment="Center">
+      Handbooks
+    </Label>
+    <ActivityIndicator x:Name="updatingSpinner" IsRunning="{Binding ShowActivityIndicator}" IsVisible="True" />
+    <Label FontSize="Medium" TextColor="Red" IsVisible="{Binding ShowNeedLoginAndLicencedMessage}">
+      You need to login and enter a Licence Key before you can access any Handbooks.
+    </Label>
+    <Label FontSize="Medium" IsVisible="{Binding ShowNotLoggedInMessage}">
+      You are not logged in.
+    </Label>
+    <Label FontSize="Medium" IsVisible="{Binding ShowNotLicencedMessage}">
+      You are logged in but you have not set a valid Licence Key.
+    </Label>
+    <Button Text="Login" IsVisible="{Binding ShowNotLoggedInMessage}"/>
+    <Button Text="Set Licence Key" IsVisible="{Binding ShowNotLicencedMessage}"/>
+    <ListView x:Name="bookList" SeparatorVisibility="None" IsVisible="{Binding ShowBookList}">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <Button Text="{Binding Model.Title}" Command="{Binding OpenThisBook}" />
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
   </StackLayout>
 </ContentPage>
