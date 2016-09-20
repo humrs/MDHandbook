@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+using System;
 using Xamarin.Forms;
 
 
@@ -24,6 +25,18 @@ namespace MDHandbookApp.Forms.Views
         public PrivacyPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            githubLink.GestureRecognizers.Add(
+                new TapGestureRecognizer() {
+                    Command = new Command(() => {
+                        Device.OpenUri(new Uri("https://github.com/humrs/MDHandbookApp/"));
+                    })
+                });
         }
     }
 }

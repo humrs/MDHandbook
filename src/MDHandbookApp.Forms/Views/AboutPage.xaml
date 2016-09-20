@@ -18,7 +18,7 @@ If you are sick then you should contact your physician or health care profession
 Please contact the maintainer for issues at:
       </Label>
       <Label x:Name="githubLink" TextColor="Blue">
-        https://github.com/humrs/UniHandbookApp/
+        https://github.com/humrs/MDHandbookApp/
       </Label>
       <Label FontSize="Medium" Margin="0,20,0,20">
 R. Stanley Hum
