@@ -14,36 +14,24 @@
 //    limitations under the License.
 //
 
-using Prism.Unity;
+using Prism.Navigation;
+using Xamarin.Forms;
 
-
-namespace MDHandbookApp.Forms
+namespace MDHandbookApp.Forms.Views
 {
-    public partial class App : PrismApplication
+    public partial class NavPage : NavigationPage, INavigationPageOptions
     {
-        private AppBootstrapper _appBootstrapper = null;
-
-        public App(IPlatformInitializer initializer = null) : base(initializer) { }
-
-        public override void Initialize()
-        {
-            _appBootstrapper = _appBootstrapper ?? new AppBootstrapper();
-
-            base.Initialize();
-
-            _appBootstrapper.InitializeMDHandbookServices(Container);
-        }
-
-        protected override void OnInitialized()
+        public NavPage()
         {
             InitializeComponent();
-
-            _appBootstrapper.OnInitializedNavigation(NavigationService);
         }
 
-        protected override void RegisterTypes()
+        public bool ClearNavigationStackOnNavigation
         {
-            _appBootstrapper.RegisterTypes(Container);
+            get
+            {
+                return true;
+            }
         }
     }
 }
