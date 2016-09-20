@@ -14,6 +14,8 @@
         <Button Text="MainPage"         Command="{Binding NavigateCommand}" CommandParameter="NavPage/MainPage" />
         <Button Text="Set Licence Key"  Command="{Binding NavigateCommand}" CommandParameter="NavPage/SetLicenceKeyPage" IsVisible="{Binding ShowSetLicenceKey}"/>
         <Button Text="Options"          Command="{Binding NavigateCommand}" CommandParameter="NavPage/OptionsPage" IsVisible="{Binding ShowOptions}"/>
+        <Button Text="ToggleLoggedIn"   Command="{Binding ToggleLoggedIn}" />
+        <Button Text="ToggleLicenced"   Command="{Binding ToggleLicenced}" />
       </StackLayout>
     </ContentPage>
   </MasterDetailPage.Master>

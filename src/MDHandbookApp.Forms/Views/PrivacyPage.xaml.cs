@@ -16,6 +16,7 @@
 
 using Xamarin.Forms;
 
+
 namespace MDHandbookApp.Forms.Views
 {
     public partial class PrivacyPage : ContentPage

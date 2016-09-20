@@ -17,6 +17,7 @@
 using Prism.Navigation;
 using Xamarin.Forms;
 
+
 namespace MDHandbookApp.Forms.Views
 {
     public partial class NavPage : NavigationPage, INavigationPageOptions

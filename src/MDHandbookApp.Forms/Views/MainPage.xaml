@@ -31,5 +31,8 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+    <Button Text="ToggleLoggedIn" Command="{Binding ToggleLoggedIn}" />
+    <Button Text="ToggleLicenced" Command="{Binding ToggleLicenced}" />
+    <Button Text="ToggleBusy" Command="{Binding ToggleBusy}" />
   </StackLayout>
 </ContentPage>

@@ -14,16 +14,20 @@
 //    limitations under the License.
 //
 
-using Xamarin.Forms;
+using Prism.Mvvm;
+using Prism.Navigation;
 
 
-namespace MDHandbookApp.Forms.Views
+namespace UniHandbookApp.Forms.ViewModels
 {
-    public partial class OptionsPage : ContentPage
+    public class ViewModelBase : BindableBase, INavigationAware
     {
-        public OptionsPage()
+        public virtual void OnNavigatedFrom(NavigationParameters parameters)
         {
-            InitializeComponent();
+        }
+
+        public virtual void OnNavigatedTo(NavigationParameters parameters)
+        {
         }
     }
 }
