@@ -14,20 +14,25 @@
 //    limitations under the License.
 //
 
+using MDHandbookApp.Forms.Services;
 using Prism.Commands;
-
+using Prism.Logging;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
+        private ILogService _logService;
+
         public DelegateCommand LoginGoogle { get; set; }
         public DelegateCommand LoginFacebook { get; set; }
         public DelegateCommand LoginMicrosoft { get; set; }
         public DelegateCommand LoginTwitter { get; set; }
         
-        public LoginPageViewModel()
+        public LoginPageViewModel(ILogService logService)
         {
+            _logService = logService;
+
             LoginGoogle = new DelegateCommand(loginGoogle);
             LoginFacebook = new DelegateCommand(loginFacebook);
             LoginMicrosoft = new DelegateCommand(loginMicrosoft);
@@ -36,22 +41,22 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private void loginTwitter()
         {
-            System.Diagnostics.Debug.WriteLine("Login Twitter");
+            _logService.Log("Login Twitter", Category.Debug, Priority.Low);
         }
 
         private void loginMicrosoft()
         {
-            System.Diagnostics.Debug.WriteLine("Login Microsoft");
+            _logService.Log("Login Microsoft", Category.Debug, Priority.Low);
         }
 
         private void loginFacebook()
         {
-            System.Diagnostics.Debug.WriteLine("Login Facebook");
+            _logService.Log("Login Facebook", Category.Debug, Priority.Low);
         }
 
         private void loginGoogle()
         {
-            System.Diagnostics.Debug.WriteLine("Login Google");
+            _logService.Log("Login Google", Category.Debug, Priority.Low);
         }
     }
 }

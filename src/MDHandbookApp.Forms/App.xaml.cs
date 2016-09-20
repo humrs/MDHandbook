@@ -14,6 +14,8 @@
 //    limitations under the License.
 //
 
+using MDHandbookApp.Forms.Services;
+using Prism.Logging;
 using Prism.Unity;
 
 
@@ -44,6 +46,11 @@ namespace MDHandbookApp.Forms
         protected override void RegisterTypes()
         {
             _appBootstrapper.RegisterTypes(Container);
+        }
+
+        protected override ILoggerFacade CreateLogger()
+        {
+            return new CustomDebugLogger();
         }
     }
 }

@@ -6,11 +6,11 @@
              x:Class="MDHandbookApp.Forms.Views.OptionsPage"
              Title="Options">
   <StackLayout Margin="20">
-    <Button Text="Logout" IsVisible="{Binding ShowLogout}"/>
-    <Button Text="Reset Licence Key" IsVisible="{Binding ShowResetLicenceKey}" />
-    <Button Text="Refresh Contents" IsVisible="{Binding ShowRefreshContents}" />
+    <Button Text="Refresh Contents"   Command="{Binding RefreshContents}" IsVisible="{Binding ShowRefreshContents}" />
+    <Button Text="Reset Licence Key"  Command="{Binding ResetLicenceKey}" IsVisible="{Binding ShowResetLicenceKey}" />
+    <Button Text="Logout"             Command="{Binding Logout}" IsVisible="{Binding ShowLogout}" />
     <Button Text="Return to MainPage" Command="{Binding NavigateCommand}" CommandParameter="/MenuPage/NavPage/MainPage" />
-    <Button Text="ToggleLoggedIn" Command="{Binding ToggleLoggedIn}" />
-    <Button Text="ToggleLicenced" Command="{Binding ToggleLicenced}" />
+    <Button Text="ToggleLoggedIn"     Command="{Binding ToggleLoggedIn}" />
+    <Button Text="ToggleLicenced"     Command="{Binding ToggleLicenced}" />
   </StackLayout>
 </ContentPage>

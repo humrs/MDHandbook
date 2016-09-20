@@ -14,7 +14,10 @@
 //    limitations under the License.
 //
 
+using System;
+using MDHandbookApp.Forms.Services;
 using Prism.Commands;
+using Prism.Logging;
 using Prism.Navigation;
 
 
@@ -23,12 +26,22 @@ namespace MDHandbookApp.Forms.ViewModels
     public class OptionsPageViewModel : ViewModelBase
     {
         private INavigationService _navigationService;
+        private ILogService _logService;
+
+#if DEBUG
         private bool _loggedIn = false;
         private bool _licenced = false;
-        public DelegateCommand<string> NavigateCommand { get; set; }
+#endif
 
+        public DelegateCommand<string> NavigateCommand { get; set; }
+        public DelegateCommand         Logout { get; set; }
+        public DelegateCommand         ResetLicenceKey { get; set; }
+        public DelegateCommand         RefreshContents { get; set; }
+
+#if DEBUG
         public DelegateCommand ToggleLoggedIn { get; set; }
         public DelegateCommand ToggleLicenced { get; set; }
+#endif
 
         private bool _showLogout = false;
         public bool ShowLogout
@@ -51,35 +64,63 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showRefreshContents, value); }
         }
         
-        public OptionsPageViewModel(INavigationService navigationService)
+        public OptionsPageViewModel(
+            INavigationService navigationService,
+            ILogService logService)
         {
             _navigationService = navigationService;
-            NavigateCommand = new DelegateCommand<string>(Navigate);
+            _logService = logService;
 
+            NavigateCommand = new DelegateCommand<string>(navigate);
+
+            Logout = new DelegateCommand(logout);
+            ResetLicenceKey = new DelegateCommand(resetLicenceKey);
+            RefreshContents = new DelegateCommand(refreshContents);
+
+#if DEBUG
             ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
             ToggleLicenced = new DelegateCommand(toggleLicenced);
+#endif
 
             _loggedIn = false;
             _licenced = false;
             updateShowFunctions();
         }
 
+        private void refreshContents()
+        {
+            _logService.Log("Refresh Contents", Category.Debug, Priority.Low);
+        }
+
+        private void resetLicenceKey()
+        {
+            _logService.Log("Reset Licence Key", Category.Debug, Priority.Low);
+        }
+
+        private void logout()
+        {
+            _logService.Log("Logout", Category.Debug, Priority.Low);
+        }
+
+        private void navigate(string name)
+        {
+            _navigationService.NavigateAsync(name);
+        }
+
+
+#if DEBUG
         private void toggleLicenced()
         {
             _licenced = !_licenced;
             updateShowFunctions();
         }
-
-        private void Navigate(string name)
-        {
-            _navigationService.NavigateAsync(name);
-        }
-
+        
         private void toggleLoggedIn()
         {
             _loggedIn = !_loggedIn;
             updateShowFunctions();
         }
+#endif
 
         private void updateShowFunctions()
         {

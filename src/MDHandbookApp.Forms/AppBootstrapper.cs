@@ -14,10 +14,12 @@
 //    limitations under the License.
 //
 
+using MDHandbookApp.Forms.Services;
 using MDHandbookApp.Forms.Views;
 using Microsoft.Practices.Unity;
 using Prism.Navigation;
 using Prism.Unity;
+using Splat;
 
 
 namespace MDHandbookApp.Forms
@@ -46,7 +48,7 @@ namespace MDHandbookApp.Forms
 
         public void InitializeMDHandbookServices(IUnityContainer _container)
         {
-            
+            _container.RegisterType<ILogService, FullDebugLogService>(new ContainerControlledLifetimeManager());
         }
     }
 }
