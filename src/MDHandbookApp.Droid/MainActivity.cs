@@ -22,7 +22,7 @@ namespace MDHandbookApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            LoadApplication(new App(new AndroidInitializer()));
+            LoadApplication(new MDHandbookApp.Forms.App(new AndroidInitializer()));
         }
     }
 

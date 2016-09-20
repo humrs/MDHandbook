@@ -6,6 +6,7 @@ using Foundation;
 using UIKit;
 using Prism.Unity;
 using Microsoft.Practices.Unity;
+using MDHandbookApp.Forms;
 
 namespace MDHandbookApp.iOS
 {

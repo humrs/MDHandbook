@@ -1,5 +1,5 @@
 ﻿using Prism.Unity;
-using MDHandbookApp.Views;
+using MDHandbookApp.Forms.Views;
 
 namespace MDHandbookApp.Forms
 {
