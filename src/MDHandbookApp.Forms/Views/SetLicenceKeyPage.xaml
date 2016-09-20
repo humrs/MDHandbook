@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MDHandbookApp.Forms.Views.SetLicenceKeyPage"
+             Title="Set Licence Key">
+  <StackLayout Margin="20">
+    <Label FontSize="Medium" Text="Please enter your licence key." />
+    <Entry Placeholder="Licence Key" />
+    <Button Text="Set Licence Key" />
+  </StackLayout>
+</ContentPage>

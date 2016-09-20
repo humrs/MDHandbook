@@ -19,9 +19,17 @@ namespace MDHandbookApp.Forms
 
         public void RegisterTypes(IUnityContainer _container)
         {
+            _container.RegisterTypeForNavigation<AboutPage>();
+            _container.RegisterTypeForNavigation<BookpagePage>();
+            _container.RegisterTypeForNavigation<LicenceErrorPage>();
+            _container.RegisterTypeForNavigation<LoginPage>();
             _container.RegisterTypeForNavigation<MainPage>();
-            _container.RegisterTypeForNavigation<NavPage>();
             _container.RegisterTypeForNavigation<MenuPage>();
+            _container.RegisterTypeForNavigation<NavPage>();
+            _container.RegisterTypeForNavigation<OptionsPage>();
+            _container.RegisterTypeForNavigation<PrivacyPage>();
+            _container.RegisterTypeForNavigation<SetLicenceKeyPage>();
+            _container.RegisterTypeForNavigation<UnauthorizedErrorPage>();
         }
 
         public void InitializeMDHandbookServices(IUnityContainer _container)

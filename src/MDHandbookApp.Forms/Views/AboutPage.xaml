@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MDHandbookApp.Forms.Views.AboutPage"
+             Title="About">
+  <ScrollView>
+
+    <StackLayout Margin="20">
+      <Label FontSize="Medium">
+The UniHandbookApp is an open source mobile application for providing medical residents curated knowledge from their respective programs.
+
+The information provided in this app is for educational purposes should only be used by trainees in their respective institutions and should not be used as a substitute for clinical judgement.
+
+If you are sick then you should contact your physician or health care professional.
+
+Please contact the maintainer for issues at:
+      </Label>
+      <Label x:Name="githubLink" TextColor="Blue">
+        https://github.com/humrs/UniHandbookApp/
+      </Label>
+      <Label FontSize="Medium" Margin="0,20,0,20">
+R. Stanley Hum
+Assistant Professor of Pediatrics at CUMC
+Columbia University
+      </Label>
+    </StackLayout>
+  </ScrollView>
+</ContentPage>

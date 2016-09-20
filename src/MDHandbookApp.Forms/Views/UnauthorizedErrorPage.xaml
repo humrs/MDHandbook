@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MDHandbookApp.Forms.Views.UnauthorizedErrorPage"
+             Title="Unauthorized Access Error">
+  <StackLayout Margin="20">
+    <Label FontSize="Medium" Text="You are reaching this page because the Content Server does not recognize who you are. You will need to login again with the account that you first logged in with. Normally this does not happen if you check the app once a day. If you check your app once a day, please contact your app administrator."  />
+    <Button Text="Continue" />
+  </StackLayout>
+</ContentPage>

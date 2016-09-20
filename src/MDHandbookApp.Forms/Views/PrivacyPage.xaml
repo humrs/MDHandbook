@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MDHandbookApp.Forms.Views.PrivacyPage"
+             Title="Privacy Statement">
+  <ScrollView>
+    <StackLayout Margin="20">
+      <Label FontSize="Medium">
+The UniHandbookApp is requires a user to login in using one of the following providers (OAUTH):
+
+Google
+Facebook
+Microsoft
+Twitter
+
+Licence Key provided by your institution or content provider is required as well.
+
+No personal information is used from your provider (only the provider's unique identifier is used).
+
+Each Licence Key is unique and is used by an institution or content provider to deliver user specific information.
+
+No personally identifiable information and no protected health information is required or delivered via this mobile application.
+
+Usage information is used to improve the provision of educational material and improve the mobile application experience.
+
+For further information contact the maintainer at:
+      </Label>
+      <Label x:Name="githubLink" TextColor="Blue">
+        https://github.com/humrs/UniHandbookApp/
+      </Label>
+      <Label FontSize="Medium" Margin="0,20,0,20">
+R. Stanley Hum
+Assistant Professor of Pediatrics at CUMC
+Columbia University
+      </Label>
+    </StackLayout>
+  </ScrollView>
+</ContentPage>
