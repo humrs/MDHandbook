@@ -69,7 +69,7 @@ namespace MDHandbookApp.Forms.ViewModels
         {
             NavigateToAboutPage = DelegateCommand.FromAsyncHandler(navigateToAboutPage);
             NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
-            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
+            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPageRel);
             NavigateToOptionsPage = DelegateCommand.FromAsyncHandler(navigateToOptionsPage);
             NavigateToPrivacyPage = DelegateCommand.FromAsyncHandler(navigateToPrivacyPage);
             NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);

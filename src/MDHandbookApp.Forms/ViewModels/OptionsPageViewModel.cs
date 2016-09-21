@@ -83,19 +83,19 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task refreshContents()
         {
-            _logService.Log("Refresh Contents", Category.Debug, Priority.Low);
+            _logService.Debug("Refresh Contents");
             await navigateToMainPage();
         }
 
         private async Task resetLicenceKey()
         {
-            _logService.Log("Reset Licence Key", Category.Debug, Priority.Low);
+            _logService.Debug("Reset Licence Key");
             await navigateToMainPage();
         }
 
         private async Task logout()
         {
-            _logService.Log("Logout", Category.Debug, Priority.Low);
+            _logService.Debug("Logout");
             await navigateToMainPage();            
         }
 

@@ -17,7 +17,6 @@
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
-using Prism.Logging;
 using Prism.Navigation;
 
 
@@ -38,13 +37,13 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task logout()
         {
-            _logService.Log("Logout", Category.Debug, Priority.Low);
+            _logService.Debug("Logout");
             await navigateToMainPage();
         }
 
         private async Task resetLicenceKey()
         {
-            _logService.Log("Reset Licence Key", Category.Debug, Priority.Low);
+            _logService.Debug("Reset Licence Key");
             await navigateToMainPage();
         }
 

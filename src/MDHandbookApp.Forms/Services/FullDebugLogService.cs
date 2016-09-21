@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+using System;
 using System.Runtime.CompilerServices;
 using Prism.Logging;
 
@@ -29,7 +30,23 @@ namespace MDHandbookApp.Forms.Services
             _logger = logger;
         }
 
-        public void Log(string message, Category category, Priority priority, [CallerMemberName]string memberName = "")
+        public void Debug(string message, Priority priority = Priority.Low, [CallerMemberName] string memberName = "")
+        {
+            this.Log(message, Category.Debug, priority, memberName);
+        }
+
+        public void Info(string message, Priority priority = Priority.Low, [CallerMemberName] string memberName = "")
+        {
+            this.Log(message, Category.Info, priority, memberName);
+        }
+
+        public void InfoException(string message, Exception ex, Priority priority = Priority.Low, [CallerMemberName] string memberName = "")
+        {
+            var fullMessage = $"{message} [{ex.ToString()}]";
+            this.Log(fullMessage, Category.Exception, priority, memberName);
+        }
+
+        private void Log(string message, Category category, Priority priority, string memberName)
         {
             _logger.Log($"({memberName}) {message}", category, priority);
         }

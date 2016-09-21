@@ -20,6 +20,7 @@ namespace MDHandbookApp.Forms.ViewModels
     public static class Constants
     {
         public const string MainPageAbsUrl = "/MenuPage/NavPage/MainPage";
+        public const string MainPageRelUrl = "NavPage/MainPage";
         public const string SetLicenceKeyPageAbsUrl = "/MenuPage/NavPage/SetLicenceKeyPage";
         public const string LoginPageAbsUrl = "/MenuPage/NavPage/LoginPage";
         public const string UnauthorizedErrorPageRelUrl = "NavPage/UnauthorizedErrorPage";

@@ -9,7 +9,7 @@
 
     <StackLayout Margin="20">
       <Label FontSize="Medium">
-The UniHandbookApp is an open source mobile application for providing medical residents curated knowledge from their respective programs.
+The MDHandbookApp is an open source mobile application for providing medical residents curated knowledge from their respective programs.
 
 The information provided in this app is for educational purposes should only be used by trainees in their respective institutions and should not be used as a substitute for clinical judgement.
 

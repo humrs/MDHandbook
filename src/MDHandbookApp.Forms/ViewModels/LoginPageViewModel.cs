@@ -41,25 +41,25 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task loginTwitter()
         {
-            _logService.Log("Login Twitter", Category.Debug, Priority.Low);
+            _logService.Debug("Login Twitter");
             await navigateToMainPage();
         }
 
         private async Task loginMicrosoft()
         {
-            _logService.Log("Login Microsoft", Category.Debug, Priority.Low);
+            _logService.Debug("Login Microsoft");
             await navigateToMainPage();
         }
 
         private async Task loginFacebook()
         {
-            _logService.Log("Login Facebook", Category.Debug, Priority.Low);
+            _logService.Debug("Login Facebook");
             await navigateToMainPage();
         }
 
         private async Task loginGoogle()
         {
-            _logService.Log("Login Google", Category.Debug, Priority.Low);
+            _logService.Debug("Login Google");
             await navigateToMainPage();
         }
     }

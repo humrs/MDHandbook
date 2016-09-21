@@ -36,7 +36,7 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task setLicenceKey()
         {
-            _logService.Log("Set Licence Key", Category.Debug, Priority.Low);
+            _logService.Debug("Set Licence Key");
             await navigateToMainPage();
         }
     }

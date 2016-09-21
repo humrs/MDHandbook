@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+using System;
 using System.Runtime.CompilerServices;
 using Prism.Logging;
 
@@ -22,6 +23,8 @@ namespace MDHandbookApp.Forms.Services
 {
     public interface ILogService
     {
-        void Log(string message, Category category, Priority priority, [CallerMemberName] string memberName = "");
+        void Debug(string message, Priority priority = Priority.Low, [CallerMemberName] string memberName = "");
+        void Info(string message, Priority priority = Priority.Low, [CallerMemberName] string memberName = "");
+        void InfoException(string message, Exception ex, Priority priority = Priority.Low, [CallerMemberName] string memberName = "");
     }
 }

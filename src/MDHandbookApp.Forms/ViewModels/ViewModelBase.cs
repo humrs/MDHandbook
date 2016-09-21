@@ -37,7 +37,12 @@ namespace MDHandbookApp.Forms.ViewModels
 
         protected virtual async Task navigateToMainPage()
         {
-            await _navigationService.NavigateAsync(Constants.MainPageAbsUrl, animated: false);
+            await _navigationService.NavigateAsync(Constants.MainPageAbsUrl, animated: true);
+        }
+
+        protected virtual async Task navigateToMainPageRel()
+        {
+            await _navigationService.NavigateAsync(Constants.MainPageRelUrl, animated: true);
         }
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
