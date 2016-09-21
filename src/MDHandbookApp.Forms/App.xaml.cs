@@ -14,21 +14,48 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
+using Microsoft.WindowsAzure.MobileServices;
 using Prism.Logging;
 using Prism.Unity;
 
 
 namespace MDHandbookApp.Forms
 {
+    public interface IAuthenticate
+    {
+        Task<bool> Authenticate(MobileServiceAuthenticationProvider provider);
+    }
+
     public partial class App : PrismApplication
     {
+        public static IAuthenticate Authenticator { get; private set; }
+
+        public static void Init(IAuthenticate authenticator)
+        {
+            Authenticator = authenticator;
+        }
+
+
+        public static MobileServiceClient ServerClient { get; private set; }
+
+
         private AppBootstrapper _appBootstrapper = null;
 
         public App(IPlatformInitializer initializer = null) : base(initializer) { }
 
         public override void Initialize()
         {
+#if DEBUG
+            ServerClient = new MobileServiceClient(Constants.TestMobileURL);
+            ServerClient.AlternateLoginHost = new Uri(Constants.ProductionMobileURL);
+#else
+            ServerClient = new MobileServiceCLient(Constants.ProductionMobileURL);
+#endif
+
+
             _appBootstrapper = _appBootstrapper ?? new AppBootstrapper();
 
             base.Initialize();

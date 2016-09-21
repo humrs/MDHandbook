@@ -34,11 +34,14 @@ namespace MDHandbookApp.Forms.Actions
     {
         private IReduxService _reduxService;
         private IMobileService _mobileService;
+        private ILogService _logService;
 
-        private ServerActionCreators(
+        public ServerActionCreators(
+            ILogService logService,
             IReduxService reduxService,
             IMobileService mobileService)
         {
+            _logService = logService;
             _reduxService = reduxService;
             _mobileService = mobileService;
         }
@@ -157,7 +160,10 @@ namespace MDHandbookApp.Forms.Actions
 
             dispatch(new SetCheckingLoginAction());
 
+            
             var success = await _mobileService.Authenticate(provider);
+
+            _logService.Debug($"Authenticate: {success}");
 
             if (success)
             {

@@ -27,7 +27,9 @@ namespace MDHandbookApp.Forms.Services
 
         public ReduxService(IApplicationReducers _applicationReducers)
         {
-            Store = new Redux.Store<AppState>(reducer: _applicationReducers.ReduceApplication);
+            var initialAppState = AppState.CreateEmpty();
+
+            Store = new Redux.Store<AppState>(reducer: _applicationReducers.ReduceApplication, initialState: initialAppState);
         }
     }
 }

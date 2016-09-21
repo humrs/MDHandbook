@@ -15,7 +15,9 @@
 //
 
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Logging;
 using Prism.Navigation;
@@ -24,25 +26,35 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
+        private IReduxService _reduxService;
+        private IServerActionCreators _serverActionCreators;
+        
         public DelegateCommand LoginGoogle { get; set; }
         public DelegateCommand LoginFacebook { get; set; }
         public DelegateCommand LoginMicrosoft { get; set; }
         public DelegateCommand LoginTwitter { get; set; }
+        public DelegateCommand NavigateToMainPage { get; set; }
         
         public LoginPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService,
+            IServerActionCreators serverActionCreators) : base(logService, navigationService)
         {
+            _reduxService = reduxService;
+            _serverActionCreators = serverActionCreators;
+
             LoginGoogle =    DelegateCommand.FromAsyncHandler(loginGoogle);
             LoginFacebook =  DelegateCommand.FromAsyncHandler(loginFacebook);
             LoginMicrosoft = DelegateCommand.FromAsyncHandler(loginMicrosoft);
             LoginTwitter =   DelegateCommand.FromAsyncHandler(loginTwitter);
+            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
         }
 
         private async Task loginTwitter()
         {
             _logService.Debug("Login Twitter");
-            await navigateToMainPage();
+            await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Twitter));    
         }
 
         private async Task loginMicrosoft()

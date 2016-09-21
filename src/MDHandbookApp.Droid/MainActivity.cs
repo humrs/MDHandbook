@@ -19,60 +19,31 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using MDHandbookApp.Forms.Services;
-using Microsoft.WindowsAzure.MobileServices;
+using MDHandbookApp.Forms;
 using Microsoft.Practices.Unity;
+using Microsoft.WindowsAzure.MobileServices;
 using Prism.Unity;
-using MDHandbookApp.Droid;
 
-[assembly: Xamarin.Forms.Dependency(typeof(MainActivity))]
 namespace MDHandbookApp.Droid
 {
     [Activity(Label = "MDHandbookApp", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IMobileClient
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IAuthenticate
     {
-        private MobileServiceClient _client;
-        public MobileServiceClient Client
-        {
-            get
-            {
-                return _client;
-            }
-        }
-
-        public MobileServiceUser CurrentUser
-        {
-            get
-            {
-                return _client.CurrentUser;
-            }
-        }
+        private MobileServiceUser user;
 
         public async Task<bool> Authenticate(MobileServiceAuthenticationProvider provider)
         {
             var success = false;
             try
             {
-                var user = await _client.LoginAsync(this, provider);
+                user = await App.ServerClient.LoginAsync(this, provider);
                 success = true;
             }
-            catch (Exception)
+            catch(Exception)
             {
 
             }
             return success;
-
-        }
-
-        public void DisposeClient()
-        {
-            _client.Dispose();
-        }
-
-        public void SetUserCredentials(string userId, string token)
-        {
-            _client.CurrentUser.UserId = userId;
-            _client.CurrentUser.MobileServiceAuthenticationToken = token;
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -84,12 +55,7 @@ namespace MDHandbookApp.Droid
 
             Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
-#if DEBUG
-            _client = new MobileServiceClient(Constants.TestMobileURL);
-            _client.AlternateLoginHost = new Uri(Constants.ProductionMobileURL);
-#else
-            _client = new MobileServiceClient(Constants.ProductionMobileURL);
-#endif
+            App.Init((IAuthenticate) this);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new MDHandbookApp.Forms.App(new AndroidInitializer()));

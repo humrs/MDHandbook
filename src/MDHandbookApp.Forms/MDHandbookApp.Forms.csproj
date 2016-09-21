@@ -63,6 +63,7 @@
     <Compile Include="Services\IMobileService.cs" />
     <Compile Include="Services\IReduxService.cs" />
     <Compile Include="Services\LoginProviders.cs" />
+    <Compile Include="Services\MyMobileClient.cs" />
     <Compile Include="Services\ReduxService.cs" />
     <Compile Include="Services\ServerExceptions.cs" />
     <Compile Include="States\AppState.cs" />

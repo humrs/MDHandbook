@@ -11,5 +11,6 @@
     <Button Text="Facebook"  Command="{Binding LoginFacebook}"/>
     <Button Text="Microsoft" Command="{Binding LoginMicrosoft}"/>
     <Button Text="Twitter"   Command="{Binding LoginTwitter}" />
+    <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />
   </StackLayout>
 </ContentPage>

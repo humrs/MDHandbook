@@ -26,12 +26,14 @@ namespace MDHandbookApp.Forms.ViewModels
     public class SetLicenceKeyPageViewModel : ViewModelBase
     {
         public DelegateCommand SetLicenceKey { get; set; }
+        public DelegateCommand NavigateToMainPage { get; set; }
         
         public SetLicenceKeyPageViewModel(
             ILogService logService,
             INavigationService navigationService) : base(logService, navigationService)
         {
             SetLicenceKey = DelegateCommand.FromAsyncHandler(setLicenceKey);
+            NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
         }
 
         private async Task setLicenceKey()

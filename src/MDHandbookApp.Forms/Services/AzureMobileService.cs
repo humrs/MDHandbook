@@ -461,6 +461,7 @@ namespace MDHandbookApp.Forms.Services
                     throw new Exception("Should Never Get here");
             }
 
+            _logService.Debug($"Authenticate with {azureProvider}");
             return await _mobileClient.Authenticate(azureProvider);
         }
 

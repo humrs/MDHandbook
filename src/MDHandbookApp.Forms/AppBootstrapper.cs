@@ -60,6 +60,7 @@ namespace MDHandbookApp.Forms
 
             _container.RegisterType<IReduxService, ReduxService>(new ContainerControlledLifetimeManager());
 
+            _container.RegisterType<IMobileClient, MyMobileClient>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IMobileService, AzureMobileService>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IServerActionCreators, ServerActionCreators>(new ContainerControlledLifetimeManager());

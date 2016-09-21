@@ -9,5 +9,6 @@
     <Label FontSize="Medium" Text="Please enter your licence key." />
     <Entry Placeholder="Licence Key" />
     <Button Text="Set Licence Key" Command="{Binding SetLicenceKey}" />
+    <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />
   </StackLayout>
 </ContentPage>
