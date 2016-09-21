@@ -14,6 +14,8 @@
 //    limitations under the License.
 //
 
+using MDHandbookApp.Forms.Actions;
+using MDHandbookApp.Forms.Reducers;
 using MDHandbookApp.Forms.Services;
 using MDHandbookApp.Forms.Views;
 using Microsoft.Practices.Unity;
@@ -47,7 +49,20 @@ namespace MDHandbookApp.Forms
 
         public void InitializeMDHandbookServices(IUnityContainer _container)
         {
+            // Order is very important
             _container.RegisterType<ILogService, FullDebugLogService>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterType<IBookReducers, BookReducers>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IFullpageReducers, FullpageReducers>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IHandbookStateReducers, HandbookStateReducers>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IPostUpdateStateReducers, PostUpdateStateReducers>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IApplicationReducers, ApplicationReducers>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterType<IReduxService, ReduxService>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterType<IMobileService, AzureMobileService>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterType<IServerActionCreators, ServerActionCreators>(new ContainerControlledLifetimeManager());
         }
     }
 }

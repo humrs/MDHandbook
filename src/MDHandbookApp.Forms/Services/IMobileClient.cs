@@ -16,6 +16,6 @@ namespace MDHandbookApp.Forms.Services
 
         Task<bool> Authenticate(MobileServiceAuthenticationProvider provider);
 
-        void Dispose();
+        void DisposeClient();
     }
 }

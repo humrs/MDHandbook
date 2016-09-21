@@ -399,7 +399,6 @@ namespace MDHandbookApp.Forms.Services
 
         public void Dispose()
         {
-            _mobileClient.Dispose();
             _httpClient.Dispose();
         }
 
