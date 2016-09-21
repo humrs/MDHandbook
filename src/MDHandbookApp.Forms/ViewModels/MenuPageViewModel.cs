@@ -14,18 +14,20 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Navigation;
-
+using ReactiveUI;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class MenuPageViewModel : ViewModelBase
     {
-        private bool _loggedIn = false;
-        private bool _licenced = false;
+        private bool _networkbusy;
 
         public DelegateCommand NavigateToAboutPage { get; set; }
         public DelegateCommand NavigateToPrivacyPage { get; set; }
@@ -34,12 +36,14 @@ namespace MDHandbookApp.Forms.ViewModels
         public DelegateCommand NavigateToSetLicenceKeyPage { get; set; }
         public DelegateCommand NavigateToOptionsPage { get; set; }
 
+        private IObservable<bool> isloggedin;
+        private IObservable<bool> islicenced;
+
+
 #if DEBUG
+        public DelegateCommand ToggleNetworkBusy { get; set; }
         public DelegateCommand NavigateToLicenceErrorPage { get; set; }
         public DelegateCommand NavigateToUnauthorizedErrorPage { get; set; }
-
-        public DelegateCommand ToggleLoggedIn { get; set; }
-        public DelegateCommand ToggleLicenced { get; set; }
 #endif
 
         private bool _showLogin = true;
@@ -65,7 +69,8 @@ namespace MDHandbookApp.Forms.ViewModels
         
         public MenuPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
             NavigateToAboutPage = DelegateCommand.FromAsyncHandler(navigateToAboutPage);
             NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
@@ -74,15 +79,20 @@ namespace MDHandbookApp.Forms.ViewModels
             NavigateToPrivacyPage = DelegateCommand.FromAsyncHandler(navigateToPrivacyPage);
             NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
 
+            _networkbusy = false;
+
             NavigateToLicenceErrorPage = DelegateCommand.FromAsyncHandler(navigateToLicenceErrorPage);
             NavigateToUnauthorizedErrorPage = DelegateCommand.FromAsyncHandler(navigateToUnauthorizedErrorPage);
+            ToggleNetworkBusy = new DelegateCommand(toggleNetworkBusy);
+        }
 
-            ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
-            ToggleLicenced = new DelegateCommand(toggleLicenced);
-
-            _loggedIn = false;
-            _licenced = false;
-            updateShowFunctions();
+        private void toggleNetworkBusy()
+        {
+            if (!_networkbusy)
+                _reduxService.Store.Dispatch(new SetIsNetworkBusyAction());
+            else
+                _reduxService.Store.Dispatch(new ClearIsNetworkBusyAction());
+            _networkbusy = !_networkbusy;
         }
 
         private async Task navigateToUnauthorizedErrorPage()
@@ -120,38 +130,54 @@ namespace MDHandbookApp.Forms.ViewModels
             await _navigationService.NavigateAsync(Constants.AboutPageRelUrl);
         }
 
-        private void toggleLicenced()
+        protected override void setupObservables()
         {
-            _licenced = !_licenced;
-            updateShowFunctions();
+            isloggedin = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
+                .Select(d => d.CurrentState.IsLoggedIn);
+
+            islicenced = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
+                .Select(d => d.CurrentState.IsLicensed);
         }
 
-        private void toggleLoggedIn()
+        protected override void setupSubscriptions()
         {
-            _loggedIn = !_loggedIn;
-            updateShowFunctions();
+            isloggedin
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowLogin = !x;
+                    });
+
+            isloggedin
+                .CombineLatest(islicenced, (x, y) => x || y)
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowOptions = x;
+                    });
+
+            isloggedin
+                .CombineLatest(islicenced, (x, y) => x && !y)
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowSetLicenceKey = x;
+                    });
+
         }
 
-        private void updateShowFunctions()
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            ShowLogin = updateShowLogin(_loggedIn);
-            ShowSetLicenceKey = updateShowSetLicenceKey(_loggedIn, _licenced);
-            ShowOptions = updateShowOptions(_loggedIn, _licenced);
-        }
+            base.OnNavigatedTo(parameters);
 
-        private bool updateShowOptions(bool loggedIn, bool licenced)
-        {
-            return loggedIn || licenced;
-        }
+            setupObservables();
 
-        private bool updateShowSetLicenceKey(bool loggedIn, bool licenced)
-        {
-            return loggedIn && !licenced;
-        }
-
-        private bool updateShowLogin(bool loggedIn)
-        {
-            return !loggedIn;
+            setupSubscriptions();
         }
     }
 }

@@ -27,46 +27,28 @@ namespace MDHandbookApp.Forms.Actions
     }
     public class LogoutAction : IAction { }
 
-    public class SetCheckingLoginAction : IAction { }
-
-
     public class SetLicenceKeyAction : IAction
     {
         public string LicenceKey { get; set; }
     }
     public class ClearLicenceKeyAction : IAction { }
 
-    public class VerifyingLicenceKeyAction : IAction { }
-    public class ClearVerifyingLicenceKeyAction : IAction { }
-
     public class SetLicensedAction : IAction { }
     public class ClearLicensedAction : IAction { }
 
 
-    public class SetUpdatingDataAction : IAction { }
-    public class ClearUpdatingDataAction : IAction { }
+    public class SetIsDataUpdatedAction : IAction { }
+    public class ClearIsDataUpdatedAction : IAction { }
 
     public class SetLastUpdateTimeAction : IAction
     {
         public DateTimeOffset UpdateTime { get; set; }
     }
 
-
-    public class SetPostingUpdateDataAction : IAction { }
-    public class ClearPostingUpdateDataAction : IAction { }
-
-
-    public class SetRefreshingTokenAction : IAction { }
-    public class ClearRefreshingTokenAction : IAction { }
-
     public class SetRefreshTokenAction : IAction
     {
         public string Token { get; set; }
     }
-
-
-    public class SetLoadingAppLogAction : IAction { }
-    public class ClearLoadingAppLogAction : IAction { }
 
 
     public class SetHasLicensedErrorAction : IAction { }
@@ -75,12 +57,7 @@ namespace MDHandbookApp.Forms.Actions
     public class SetHasUnauthorizedErrorAction : IAction { }
     public class ClearHasUnauthorizedErrorAction : IAction { }
 
-    public class SetNeedsUpdateAction : IAction { }
-
-    public class SetResettingUpdatesAction : IAction { }
-    public class ClearResettingUpdatesAction : IAction { }
-
-    public class SetReloadedAction : IAction { }
-    public class ClearReloadedAction : IAction { }
+    public class SetIsNetworkBusyAction : IAction { }
+    public class ClearIsNetworkBusyAction : IAction { }
 
 }

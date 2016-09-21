@@ -14,28 +14,26 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Navigation;
-
+using ReactiveUI;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-
-        private bool _loggedIn = false;
-        private bool _licenced = false;
-        private bool _busy = false;
-
         public DelegateCommand NavigateToLoginPage { get; set; }
         public DelegateCommand NavigateToSetLicenceKeyPage { get; set; }
 
-        public DelegateCommand ToggleLoggedIn { get; set; }
-        public DelegateCommand ToggleLicenced { get; set; }
-        public DelegateCommand ToggleBusy { get; set; }
+        private IObservable<bool> isloggedin;
+        private IObservable<bool> islicenced;
+        private IObservable<bool> isnetworkbusy;
 
+        
         private bool _showActivityIndicator = false;
         public bool ShowActivityIndicator
         {
@@ -73,18 +71,11 @@ namespace MDHandbookApp.Forms.ViewModels
         
         public MainPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
             NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
             NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
-
-            ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
-            ToggleLicenced = new DelegateCommand(toggleLicenced);
-            ToggleBusy = new DelegateCommand(toggleBusy);
-
-            _loggedIn = false;
-            _licenced = false;
-            updateShowFunctions();
         }
 
         private async Task navigateToSetLicenceKeyPage()
@@ -97,56 +88,68 @@ namespace MDHandbookApp.Forms.ViewModels
             await _navigationService.NavigateAsync(Constants.LoginPageAbsUrl);
         }
 
-        private void toggleBusy()
+
+        protected override void setupObservables()
         {
-            _busy = !_busy;
-            updateShowFunctions();
+            isloggedin = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
+                .Select(d => d.CurrentState.IsLoggedIn);
+
+            islicenced = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
+                .Select(d => d.CurrentState.IsLicensed);
+
+            isnetworkbusy = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsNetworkBusy })
+                .Select(d => d.CurrentState.IsNetworkBusy);
         }
 
-        private void toggleLicenced()
+        protected override void setupSubscriptions()
         {
-            _licenced = !_licenced;
-            updateShowFunctions();
+            isloggedin
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowNotLoggedInMessage = !x;
+                    });
+
+            isloggedin
+                .CombineLatest(islicenced, (x, y) => x && !y)
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowNotLicencedMessage = x;
+                    });
+
+            isloggedin
+                .CombineLatest(islicenced, (x, y) => x && y)
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowBookList = x;
+                        ShowNeedLoginAndLicencedMessage = !x;
+                    });
+
+            isnetworkbusy
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowActivityIndicator = x;
+                    });
+           
         }
 
-        private void toggleLoggedIn()
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            _loggedIn = !_loggedIn;
-            updateShowFunctions();
-        }
+            base.OnNavigatedTo(parameters);
 
-        private void updateShowFunctions()
-        {
-            ShowNotLoggedInMessage = updateShowNotLoggedInMessage(_loggedIn);
-            ShowNotLicencedMessage = updateShowNotLicencedMessage(_loggedIn,_licenced);
-            ShowNeedLoginAndLicencedMessage = updateShowNeedLoginAndLicencedMessage(_loggedIn, _licenced);
-            ShowActivityIndicator = updateShowActivityIndicator(_busy);
-            ShowBookList = updateShowBookList(_loggedIn, _licenced);
-        }
+            setupObservables();
 
-        private bool updateShowBookList(bool loggedIn, bool licenced)
-        {
-            return loggedIn && licenced;
-        }
-
-        private bool updateShowActivityIndicator(bool busy)
-        {
-            return busy;
-        }
-
-        private bool updateShowNeedLoginAndLicencedMessage(bool loggedIn, bool licenced)
-        {
-            return !(loggedIn && licenced);
-        }
-
-        private bool updateShowNotLicencedMessage(bool loggedIn, bool licenced)
-        {
-            return loggedIn && !licenced;
-        }
-
-        private bool updateShowNotLoggedInMessage(bool loggedIn)
-        {
-            return !loggedIn;
+            setupSubscriptions();
         }
     }
 }

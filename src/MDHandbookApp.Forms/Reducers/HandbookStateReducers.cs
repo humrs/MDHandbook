@@ -35,189 +35,85 @@ namespace MDHandbookApp.Forms.Reducers
         public HandbookState HandbookStateReducer(HandbookState previousState, IAction action)
         { 
             if (action is LoginAction)
-            {
                 return loginReducer(previousState, (LoginAction) action);
-            }
-
+            
             if (action is LogoutAction)
-            {
                 return logoutReducer(previousState, (LogoutAction) action);
-            }
-
-            if (action is SetCheckingLoginAction)
-            {
-                return setCheckingLoginReducer(previousState, (SetCheckingLoginAction) action);
-            }
-
+            
             if (action is SetLicenceKeyAction)
-            {
                 return setLicenceKeyReducer(previousState, (SetLicenceKeyAction) action);
-            }
-
+            
             if (action is ClearLicenceKeyAction)
-            {
                 return clearLicenceKeyReducer(previousState, (ClearLicenceKeyAction) action);
-            }
-
-            if (action is VerifyingLicenceKeyAction)
-            {
-                return checkingLicenceKeyReducer(previousState, (VerifyingLicenceKeyAction) action);
-            }
-
-            if (action is ClearVerifyingLicenceKeyAction)
-            {
-                return cancelCheckingLicenceKeyReducer(previousState, (ClearVerifyingLicenceKeyAction) action);
-            }
-
+            
             if (action is SetLicensedAction)
-            {
                 return setLicensedReducer(previousState, (SetLicensedAction) action);
-            }
-
+            
             if (action is ClearLicensedAction)
-            {
                 return clearLicensedReducer(previousState, (ClearLicensedAction) action);
-            }
+            
+            if (action is SetIsDataUpdatedAction)
+                return setIsDataUpdatedReducer(previousState, (SetIsDataUpdatedAction) action);
 
-
-            if (action is SetUpdatingDataAction)
-            {
-                return setUpdatingDataReducer(previousState, (SetUpdatingDataAction) action);
-            }
-
-            if (action is ClearUpdatingDataAction)
-            {
-                return clearUpdatingDataReducer(previousState, (ClearUpdatingDataAction) action);
-            }
+            if (action is ClearIsDataUpdatedAction)
+                return clearIsDataUpdatedReducer(previousState, (ClearIsDataUpdatedAction) action);
 
             if (action is SetLastUpdateTimeAction)
-            {
                 return setLastUpdateTimeReducer(previousState, (SetLastUpdateTimeAction) action);
-            }
-
-
-            if (action is SetPostingUpdateDataAction)
-            {
-                return setPostingUpdateDataReducer(previousState, (SetPostingUpdateDataAction) action);
-            }
-
-            if (action is ClearPostingUpdateDataAction)
-            {
-                return clearPostingUpdateDataReducer(previousState, (ClearPostingUpdateDataAction) action);
-            }
-
-
-            if (action is SetRefreshingTokenAction)
-            {
-                return setRefreshingTokenReducer(previousState, (SetRefreshingTokenAction) action);
-            }
-
-            if (action is ClearRefreshingTokenAction)
-            {
-                return clearRefreshingTokenReducer(previousState, (ClearRefreshingTokenAction) action);
-            }
-
+            
             if (action is SetRefreshTokenAction)
-            {
                 return setRefreshTokenReducer(previousState, (SetRefreshTokenAction) action);
-            }
-
-
-            if (action is SetLoadingAppLogAction)
-            {
-                return setLoadingAppLogReducer(previousState, (SetLoadingAppLogAction) action);
-            }
-
-            if (action is ClearLoadingAppLogAction)
-            {
-                return clearLoadingAppLogReducer(previousState, (ClearLoadingAppLogAction) action);
-            }
 
             if (action is SetHasLicensedErrorAction)
-            {
                 return setHasLicensedErrorReducer(previousState, (SetHasLicensedErrorAction) action);
-            }
 
             if (action is ClearHasLicensedErrorAction)
-            {
                 return clearHasLicensedErrorReducer(previousState, (ClearHasLicensedErrorAction) action);
-            }
 
             if (action is SetHasUnauthorizedErrorAction)
-            {
-                return setHasUnauthorizedErrorReducer(previousState, (SetHasUnauthorizedErrorAction)action);
-            }
+                return setHasUnauthorizedErrorReducer(previousState, (SetHasUnauthorizedErrorAction) action);
 
             if (action is ClearHasUnauthorizedErrorAction)
-            {
-                return clearHasUnauthorizedErrorReducer(previousState, (ClearHasUnauthorizedErrorAction)action);
-            }
+                return clearHasUnauthorizedErrorReducer(previousState, (ClearHasUnauthorizedErrorAction) action);
 
-            if (action is SetNeedsUpdateAction)
-            {
-                return setNeedsUpdateReducer(previousState, (SetNeedsUpdateAction) action);
-            }
+            if (action is SetIsNetworkBusyAction)
+                return setIsNetworkBusyReducer(previousState, (SetIsNetworkBusyAction) action);
 
-            if (action is SetResettingUpdatesAction)
-            {
-                return setResettingUpdatesReducer(previousState, (SetResettingUpdatesAction) action);
-            }
-
-            if (action is ClearResettingUpdatesAction)
-            {
-                return clearResettingUpdatesReducer(previousState, (ClearResettingUpdatesAction) action);
-            }
-
-            if (action is SetReloadedAction)
-            {
-                return setReloadedReducer(previousState, (SetReloadedAction) action);
-            }
-
-            if (action is ClearReloadedAction)
-            {
-                return clearReloadedReducer(previousState, (ClearReloadedAction) action);
-            }
+            if (action is ClearIsNetworkBusyAction)
+                return clearIsNetworkBusyReducer(previousState, (ClearIsNetworkBusyAction) action);
 
             return previousState;
         }
 
-        private HandbookState clearResettingUpdatesReducer(HandbookState previousState, ClearResettingUpdatesAction action)
+        private HandbookState clearIsNetworkBusyReducer(HandbookState previousState, ClearIsNetworkBusyAction action)
         {
-            _logService.Info("ClearResettingUpdatesReducer");
+            _logService.Info("ClearIsNetworkBusReducer");
             HandbookState newState = previousState.Clone();
-            newState.ResettingUpdates = false;
+            newState.IsNetworkBusy = false;
             return newState;
         }
 
-        private HandbookState setResettingUpdatesReducer(HandbookState previousState, SetResettingUpdatesAction action)
+        private HandbookState setIsNetworkBusyReducer(HandbookState previousState, SetIsNetworkBusyAction action)
         {
-            _logService.Info("SetResettingUpdatesReducer");
+            _logService.Info("SetIsNetworkBusReducer");
             HandbookState newState = previousState.Clone();
-            newState.ResettingUpdates = true;
+            newState.IsNetworkBusy = true;
             return newState;
         }
 
-        private HandbookState clearReloadedReducer(HandbookState previousState, ClearReloadedAction action)
+        private HandbookState clearIsDataUpdatedReducer(HandbookState previousState, ClearIsDataUpdatedAction action)
         {
-            _logService.Info("ClearReloadedReducer");
-            HandbookState newState = previousState.Clone();
-            newState.Reloaded = false;
-            return newState;
-        }
-
-        private HandbookState setReloadedReducer(HandbookState previousState, SetReloadedAction action)
-        {
-            _logService.Info("SetReloadReducer");
-            HandbookState newState = previousState.Clone();
-            newState.Reloaded = true;
-            return newState;
-        }
-
-        private HandbookState setNeedsUpdateReducer(HandbookState previousState, SetNeedsUpdateAction action)
-        {
-            _logService.Info("SetNeedsUpdateReducer");
+            _logService.Info("ClearIsDataUpdatedReducer");
             HandbookState newState = previousState.Clone();
             newState.IsDataUpdated = false;
+            return newState;
+        }
+
+        private HandbookState setIsDataUpdatedReducer(HandbookState previousState, SetIsDataUpdatedAction action)
+        {
+            _logService.Info("SetIsDataUpdatedReducer");
+            HandbookState newState = previousState.Clone();
+            newState.IsDataUpdated = true;
             return newState;
         }
 
@@ -254,21 +150,7 @@ namespace MDHandbookApp.Forms.Reducers
         }
 
 
-        private HandbookState clearLoadingAppLogReducer(HandbookState previousState, ClearLoadingAppLogAction action)
-        {
-            _logService.Info("ClearLoadingAppLogReducer");
-            HandbookState newState = previousState.Clone();
-            newState.LoadingAppLog = false;
-            return newState;
-        }
-
-        private HandbookState setLoadingAppLogReducer(HandbookState previousState, SetLoadingAppLogAction action)
-        {
-            _logService.Info("SetLoadingAppLogReducer");
-            HandbookState newState = previousState.Clone();
-            newState.LoadingAppLog = true;
-            return newState;
-        }
+        
 
         private HandbookState setRefreshTokenReducer(HandbookState previousState, SetRefreshTokenAction action)
         {
@@ -278,64 +160,19 @@ namespace MDHandbookApp.Forms.Reducers
             return newState;
         }
 
-        private HandbookState clearRefreshingTokenReducer(HandbookState previousState, ClearRefreshingTokenAction action)
-        {
-            _logService.Info("ClearRefreshingTokenReducer");
-            HandbookState newState = previousState.Clone();
-            newState.RefreshingToken = false;
-            return newState;
-        }
+        
 
-        private HandbookState setRefreshingTokenReducer(HandbookState previousState, SetRefreshingTokenAction action)
-        {
-            _logService.Info("SetRefreshingTokenReducer");
-            HandbookState newState = previousState.Clone();
-            newState.RefreshingToken = true;
-            return newState;
-        }
-
-        private HandbookState clearPostingUpdateDataReducer(HandbookState previousState, ClearPostingUpdateDataAction action)
-        {
-            _logService.Info("ClearPostingUpdateDataReducer");
-            HandbookState newState = previousState.Clone();
-            newState.PostingUpdateData = false;
-            return newState;
-        }
-
-        private HandbookState setPostingUpdateDataReducer(HandbookState previousState, SetPostingUpdateDataAction action)
-        {
-            _logService.Info("SetPostingUpdateDataReducer");
-            HandbookState newState = previousState.Clone();
-            newState.PostingUpdateData = true;
-            return newState;
-        }
-
+        
         private HandbookState setLastUpdateTimeReducer(HandbookState previousState, SetLastUpdateTimeAction action)
         {
             _logService.Info(string.Format("SetLastUpdateTimeReducer: {0}", action.UpdateTime.ToString("O")));
             HandbookState newState = previousState.Clone();
-            newState.UpdatingData = false;
             newState.IsDataUpdated = true;
             newState.LastUpdateTime = action.UpdateTime;
             return newState;
         }
 
-        private HandbookState clearUpdatingDataReducer(HandbookState previousState, ClearUpdatingDataAction action)
-        {
-            _logService.Info("ClearUpdatingDataReducer");
-            HandbookState newState = previousState.Clone();
-            newState.UpdatingData = false;
-            return newState;
-        }
-
-        private HandbookState setUpdatingDataReducer(HandbookState previousState, SetUpdatingDataAction action)
-        {
-            _logService.Info("SetUpdatingDataReducer");
-            HandbookState newState = previousState.Clone();
-            newState.UpdatingData = true;
-            return newState;
-        }
-
+        
 
         private HandbookState clearLicensedReducer(HandbookState previousState, ClearLicensedAction action)
         {
@@ -349,27 +186,12 @@ namespace MDHandbookApp.Forms.Reducers
         {
             _logService.Info("SetLicensedReducer");
             HandbookState newState = previousState.Clone();
-            newState.VerifyingLicenceKey = false;
             newState.IsLicensed = true;
             return newState;
         }
 
 
-        private HandbookState cancelCheckingLicenceKeyReducer(HandbookState previousState, ClearVerifyingLicenceKeyAction action)
-        {
-            _logService.Info("CancelCheckingLicenceKeyReducer");
-            HandbookState newState = previousState.Clone();
-            newState.VerifyingLicenceKey = false;
-            return newState;
-        }
-
-        private HandbookState checkingLicenceKeyReducer(HandbookState previousState, VerifyingLicenceKeyAction action)
-        {
-            _logService.Info("CheckingLicenceKeyReducer");
-            HandbookState newState = previousState.Clone();
-            newState.VerifyingLicenceKey = true;
-            return newState;
-        }
+        
 
         private HandbookState clearLicenceKeyReducer(HandbookState previousState, ClearLicenceKeyAction action)
         {
@@ -378,7 +200,6 @@ namespace MDHandbookApp.Forms.Reducers
             newState.LicenceKey = "";
             newState.IsLicenceKeySet = false;
             newState.IsLicensed = false;
-            newState.VerifyingLicenceKey = false;
             return newState;
         }
 
@@ -398,14 +219,6 @@ namespace MDHandbookApp.Forms.Reducers
         }
 
 
-        private HandbookState setCheckingLoginReducer(HandbookState previousState, SetCheckingLoginAction action)
-        {
-            _logService.Info("SetCheckingLoginReducer");
-            HandbookState newState = previousState.Clone();
-            newState.CheckingLogin = true;
-            return newState;
-        }
-
         private HandbookState logoutReducer(HandbookState previousState, LogoutAction action)
         {
             _logService.Info("LogoutReducer");
@@ -415,13 +228,10 @@ namespace MDHandbookApp.Forms.Reducers
 
             newState.IsUserSet = false;
             newState.IsLoggedIn = false;
-            newState.CheckingLogin = false;
-
+         
             newState.IsDataUpdated = false;
-            newState.UpdatingData = false;
-
+         
             newState.IsLicensed = false;
-            newState.VerifyingLicenceKey = false;
             return newState;
         }
 
@@ -444,15 +254,12 @@ namespace MDHandbookApp.Forms.Reducers
                 newState.AuthToken = new string(buffer);
             }
 
-            newState.CheckingLogin = false;
             newState.IsUserSet = true;
             newState.IsLoggedIn = true;
 
             newState.IsDataUpdated = false;
-            newState.UpdatingData = false;
-
+        
             newState.IsLicensed = false;
-            newState.VerifyingLicenceKey = false;
             return newState;
         }
     }

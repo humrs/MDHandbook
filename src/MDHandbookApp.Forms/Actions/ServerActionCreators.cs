@@ -158,7 +158,7 @@ namespace MDHandbookApp.Forms.Actions
             httpClientAvailable = false;
             loggingIn = true;
 
-            dispatch(new SetCheckingLoginAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             
             var success = await _mobileService.Authenticate(provider);
@@ -194,7 +194,7 @@ namespace MDHandbookApp.Forms.Actions
 
             httpClientAvailable = false;
             verifyingLicenceKey = true;
-            dispatch(new VerifyingLicenceKeyAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             bool success = false;
 
@@ -241,7 +241,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
             }
 
-            dispatch(new ClearVerifyingLicenceKeyAction());
+            dispatch(new ClearIsNetworkBusyAction());
             verifyingLicenceKey = false;
             httpClientAvailable = true;
         }
@@ -256,7 +256,7 @@ namespace MDHandbookApp.Forms.Actions
             }
 
             updatingData = true;
-            dispatch(new SetUpdatingDataAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             List<ServerUpdateMessage> messages = null;
             try
@@ -296,7 +296,7 @@ namespace MDHandbookApp.Forms.Actions
                 messages.Clear();
             }
 
-            dispatch(new ClearUpdatingDataAction());
+            dispatch(new ClearIsNetworkBusyAction());
             updatingData = false;
         }
 
@@ -309,7 +309,7 @@ namespace MDHandbookApp.Forms.Actions
             }
             
             refreshingToken = true;
-            dispatch(new SetRefreshingTokenAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             string token = null;
             try
@@ -358,7 +358,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
             }
 
-            dispatch(new ClearRefreshingTokenAction());
+            dispatch(new ClearIsNetworkBusyAction());
             refreshingToken = false;
         }
 
@@ -370,7 +370,7 @@ namespace MDHandbookApp.Forms.Actions
             }
 
             postingUpdateData = true;
-            dispatch(new SetPostingUpdateDataAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             bool success = false;
 
@@ -411,7 +411,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
             }
             
-            dispatch(new ClearPostingUpdateDataAction());
+            dispatch(new ClearIsNetworkBusyAction());
             postingUpdateData = false;
         }
 
@@ -425,7 +425,7 @@ namespace MDHandbookApp.Forms.Actions
 
             loadingAppLog = true;
 
-            dispatch(new SetLoadingAppLogAction());
+            dispatch(new SetIsNetworkBusyAction());
 
             bool success = false;
             
@@ -471,7 +471,7 @@ namespace MDHandbookApp.Forms.Actions
                 items.Clear();
             }
 
-            dispatch(new ClearLoadingAppLogAction());
+            dispatch(new ClearIsNetworkBusyAction());
             loadingAppLog = false;
         }
 
@@ -484,7 +484,7 @@ namespace MDHandbookApp.Forms.Actions
 
             resettingUpdates = true;
 
-            dispatch(new SetResettingUpdatesAction());
+            dispatch(new SetIsNetworkBusyAction());
             
             bool success = false;
             try
@@ -523,7 +523,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
             }
 
-            dispatch(new ClearResettingUpdatesAction());
+            dispatch(new ClearIsNetworkBusyAction());
             resettingUpdates = false;
         }
 
@@ -570,7 +570,7 @@ namespace MDHandbookApp.Forms.Actions
 
             if (messages.Count != 0)
             {
-                _reduxService.Store.Dispatch(new SetReloadedAction());
+                _reduxService.Store.Dispatch(new SetIsDataUpdatedAction());
             }
         }
 

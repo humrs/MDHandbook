@@ -17,6 +17,7 @@
 using System;
 using Prism.Logging;
 
+
 namespace MDHandbookApp.Forms.Services
 {
     public class CustomDebugLogger : ILoggerFacade

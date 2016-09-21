@@ -15,6 +15,7 @@
 //
 
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Logging;
@@ -30,7 +31,8 @@ namespace MDHandbookApp.Forms.ViewModels
         
         public SetLicenceKeyPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
             SetLicenceKey = DelegateCommand.FromAsyncHandler(setLicenceKey);
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
@@ -39,6 +41,7 @@ namespace MDHandbookApp.Forms.ViewModels
         private async Task setLicenceKey()
         {
             _logService.Debug("Set Licence Key");
+            _reduxService.Store.Dispatch(new SetLicensedAction());
             await navigateToMainPage();
         }
     }

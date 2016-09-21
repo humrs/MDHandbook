@@ -26,13 +26,17 @@ namespace MDHandbookApp.Forms.ViewModels
     {
         protected ILogService _logService;
         protected INavigationService _navigationService;
+        protected IReduxService _reduxService;
+
 
         public ViewModelBase(
-            ILogService logService,
-            INavigationService navigationService)
+            ILogService logService = null,
+            INavigationService navigationService = null,
+            IReduxService reduxService = null)
         {
             _logService = logService;
             _navigationService = navigationService;
+            _reduxService = reduxService;
         }
 
         protected virtual async Task navigateToMainPage()
@@ -52,5 +56,9 @@ namespace MDHandbookApp.Forms.ViewModels
         public virtual void OnNavigatedTo(NavigationParameters parameters)
         {
         }
+
+        protected virtual void setupObservables() { }
+
+        protected virtual void setupSubscriptions() { }
     }
 }

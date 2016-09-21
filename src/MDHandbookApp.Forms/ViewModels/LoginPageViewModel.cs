@@ -14,19 +14,18 @@
 //    limitations under the License.
 //
 
+using System;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
-using Prism.Logging;
 using Prism.Navigation;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
-        private IReduxService _reduxService;
         private IServerActionCreators _serverActionCreators;
         
         public DelegateCommand LoginGoogle { get; set; }
@@ -39,9 +38,8 @@ namespace MDHandbookApp.Forms.ViewModels
             ILogService logService,
             INavigationService navigationService,
             IReduxService reduxService,
-            IServerActionCreators serverActionCreators) : base(logService, navigationService)
+            IServerActionCreators serverActionCreators) : base(logService, navigationService, reduxService)
         {
-            _reduxService = reduxService;
             _serverActionCreators = serverActionCreators;
 
             LoginGoogle =    DelegateCommand.FromAsyncHandler(loginGoogle);
@@ -54,25 +52,37 @@ namespace MDHandbookApp.Forms.ViewModels
         private async Task loginTwitter()
         {
             _logService.Debug("Login Twitter");
-            await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Twitter));    
+            await login();
+            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Twitter));    
         }
 
+        
         private async Task loginMicrosoft()
         {
             _logService.Debug("Login Microsoft");
-            await navigateToMainPage();
+            await login();
+            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Microsoft));
         }
 
         private async Task loginFacebook()
         {
             _logService.Debug("Login Facebook");
-            await navigateToMainPage();
+            await login();
+            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Facebook));
         }
 
         private async Task loginGoogle()
         {
             _logService.Debug("Login Google");
+            await login();
+            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Google));
+        }
+
+        private async Task login()
+        {
+            _reduxService.Store.Dispatch(new LoginAction { UserId = "humrs", AuthToken = "token" });
             await navigateToMainPage();
         }
     }
+
 }

@@ -10,8 +10,5 @@
     <Button Text="Reset Licence Key"  Command="{Binding ResetLicenceKey}" IsVisible="{Binding ShowResetLicenceKey}" />
     <Button Text="Logout"             Command="{Binding Logout}" IsVisible="{Binding ShowLogout}" />
     <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />
-    
-    <Button Text="ToggleLoggedIn"     Command="{Binding ToggleLoggedIn}" />
-    <Button Text="ToggleLicenced"     Command="{Binding ToggleLicenced}" />
   </StackLayout>
 </ContentPage>

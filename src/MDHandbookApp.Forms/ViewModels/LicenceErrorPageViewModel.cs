@@ -15,6 +15,7 @@
 //
 
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Navigation;
@@ -29,7 +30,8 @@ namespace MDHandbookApp.Forms.ViewModels
         
         public LicenceErrorPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
             Logout = DelegateCommand.FromAsyncHandler(logout);
             ResetLicenceKey = DelegateCommand.FromAsyncHandler(resetLicenceKey);
@@ -37,13 +39,14 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task logout()
         {
-            _logService.Debug("Logout");
+            _reduxService.Store.Dispatch(new LogoutAction());
             await navigateToMainPage();
         }
 
         private async Task resetLicenceKey()
         {
             _logService.Debug("Reset Licence Key");
+            _reduxService.Store.Dispatch(new ClearLicensedAction());
             await navigateToMainPage();
         }
 

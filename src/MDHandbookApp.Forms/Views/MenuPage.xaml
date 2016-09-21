@@ -15,8 +15,7 @@
         <Button Text="Set Licence Key"  Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding ShowSetLicenceKey}"/>
         <Button Text="Options"          Command="{Binding NavigateToOptionsPage}" IsVisible="{Binding ShowOptions}"/>
         
-        <Button Text="ToggleLoggedIn"   Command="{Binding ToggleLoggedIn}" />
-        <Button Text="ToggleLicenced"   Command="{Binding ToggleLicenced}" />
+        <Button Text="ToggleBusy"          Command="{Binding ToggleNetworkBusy}" />
         <Button Text="DisplayLicenceError" Command="{Binding NavigateToLicenceErrorPage}" />
         <Button Text="DisplayUnauthorized" Command="{Binding NavigateToUnauthorizedErrorPage}" />
       </StackLayout>

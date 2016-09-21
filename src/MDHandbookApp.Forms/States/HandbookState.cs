@@ -25,7 +25,6 @@ namespace MDHandbookApp.Forms.States
         public DateTimeOffset LastUpdateTime { get; set; }
 
         public bool IsLicensed { get; set; }
-
         public bool IsLoggedIn { get; set; }
 
         public bool IsLicenceKeySet { get; set; }
@@ -38,17 +37,8 @@ namespace MDHandbookApp.Forms.States
         public bool HasLicensedError { get; set; }
         public bool HasUnauthorizedError { get; set; }
 
-        public bool CheckingLogin { get; set; }
-        public bool VerifyingLicenceKey { get; set; }
-        public bool UpdatingData { get; set; }
-        public bool PostingUpdateData { get; set; }
-        public bool RefreshingToken { get; set; }
-        public bool LoadingAppLog { get; set; }
+        public bool IsNetworkBusy { get; set; }
 
-        public bool ResettingUpdates { get; set; }
-
-        public bool Reloaded { get; set; }
-        
         
         public HandbookState()
         {
@@ -92,16 +82,7 @@ namespace MDHandbookApp.Forms.States
             this.HasLicensedError = old.HasLicensedError;
             this.HasUnauthorizedError = old.HasUnauthorizedError;
 
-            this.CheckingLogin = old.CheckingLogin;
-            this.VerifyingLicenceKey = old.VerifyingLicenceKey;
-            this.UpdatingData = old.UpdatingData;
-            this.PostingUpdateData = old.PostingUpdateData;
-            this.RefreshingToken = old.RefreshingToken;
-            this.LoadingAppLog = old.LoadingAppLog;
-
-            this.ResettingUpdates = old.ResettingUpdates;
-
-            this.Reloaded = old.Reloaded;
+            this.IsNetworkBusy = old.IsNetworkBusy;
         }
 
 
@@ -131,16 +112,7 @@ namespace MDHandbookApp.Forms.States
                 HasLicensedError = false,
                 HasUnauthorizedError = false,
 
-                CheckingLogin = false,
-                VerifyingLicenceKey = false,
-                UpdatingData = false,
-                PostingUpdateData = false,
-                RefreshingToken = false,
-                LoadingAppLog = false,
-
-                ResettingUpdates = false,
-
-                Reloaded = false
+                IsNetworkBusy = false
             };
         }
     }

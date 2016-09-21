@@ -14,32 +14,28 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using Prism.Commands;
 using Prism.Logging;
 using Prism.Navigation;
-
+using ReactiveUI;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class OptionsPageViewModel : ViewModelBase
     {
-
-#if DEBUG
-        private bool _loggedIn = false;
-        private bool _licenced = false;
-#endif
         public DelegateCommand NavigateToMainPage { get; set; }
         public DelegateCommand Logout { get; set; }
         public DelegateCommand ResetLicenceKey { get; set; }
         public DelegateCommand RefreshContents { get; set; }
-
-#if DEBUG
-        public DelegateCommand ToggleLoggedIn { get; set; }
-        public DelegateCommand ToggleLicenced { get; set; }
-#endif
-
+        
+        private IObservable<bool> isloggedin;
+        private IObservable<bool> islicenced;
+        
         private bool _showLogout = false;
         public bool ShowLogout
         {
@@ -63,22 +59,16 @@ namespace MDHandbookApp.Forms.ViewModels
         
         public OptionsPageViewModel(
             ILogService logService,
-            INavigationService navigationService) : base(logService, navigationService)
+            INavigationService navigationService,
+            IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
+            _reduxService = reduxService;
+
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
 
             Logout = DelegateCommand.FromAsyncHandler(logout);
             ResetLicenceKey = DelegateCommand.FromAsyncHandler(resetLicenceKey);
             RefreshContents = DelegateCommand.FromAsyncHandler(refreshContents);
-
-#if DEBUG
-            ToggleLoggedIn = new DelegateCommand(toggleLoggedIn);
-            ToggleLicenced = new DelegateCommand(toggleLicenced);
-#endif
-
-            _loggedIn = false;
-            _licenced = false;
-            updateShowFunctions();
         }
 
         private async Task refreshContents()
@@ -90,50 +80,57 @@ namespace MDHandbookApp.Forms.ViewModels
         private async Task resetLicenceKey()
         {
             _logService.Debug("Reset Licence Key");
+            _reduxService.Store.Dispatch(new ClearLicenceKeyAction());
             await navigateToMainPage();
         }
 
         private async Task logout()
         {
+            _reduxService.Store.Dispatch(new LogoutAction());
             _logService.Debug("Logout");
             await navigateToMainPage();            
         }
 
+        protected override void setupObservables()
+        {
+            isloggedin = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
+                .Select(d => d.CurrentState.IsLoggedIn);
 
-#if DEBUG
-        private void toggleLicenced()
-        {
-            _licenced = !_licenced;
-            updateShowFunctions();
-        }
-        
-        private void toggleLoggedIn()
-        {
-            _loggedIn = !_loggedIn;
-            updateShowFunctions();
-        }
-#endif
-
-        private void updateShowFunctions()
-        {
-            ShowLogout = updateShowLogout(_loggedIn);
-            ShowResetLicenceKey = updateShowResetLicenceKey(_loggedIn, _licenced);
-            ShowRefreshContents = updateShowRefreshContents(_loggedIn, _licenced);
+            islicenced = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
+                .Select(d => d.CurrentState.IsLicensed);
         }
 
-        private bool updateShowRefreshContents(bool loggedIn, bool licenced)
+        protected override void setupSubscriptions()
         {
-            return loggedIn && licenced;
+            isloggedin
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowLogout = x;
+                    });
+
+            islicenced
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowRefreshContents = x;
+                        ShowResetLicenceKey = x;
+                    });
+
+        }
+       
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+
+            setupObservables();
+
+            setupSubscriptions();
         }
 
-        private bool updateShowResetLicenceKey(bool loggedIn, bool licenced)
-        {
-            return loggedIn || licenced;
-        }
-
-        private bool updateShowLogout(bool loggedIn)
-        {
-            return loggedIn;
-        }
     }
 }
