@@ -50,7 +50,7 @@ namespace MDHandbookApp.Forms.Services
 
         public void SetUserCredentials(string userId, string token)
         {
-            App.ServerClient.CurrentUser.UserId = userId;
+            App.ServerClient.CurrentUser = new MobileServiceUser(userId);
             App.ServerClient.CurrentUser.MobileServiceAuthenticationToken = token;
         }
     }

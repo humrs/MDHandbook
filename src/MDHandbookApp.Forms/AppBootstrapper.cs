@@ -84,6 +84,7 @@ namespace MDHandbookApp.Forms
         {
             // Order is very important
             _container.RegisterType<ILogService, FullDebugLogService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IOfflineService, OfflineService>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IBookReducers, BookReducers>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IFullpageReducers, FullpageReducers>(new ContainerControlledLifetimeManager());

@@ -25,9 +25,12 @@ namespace MDHandbookApp.Forms.Services
     {
         public IStore<AppState> Store { get; private set; }
 
-        public ReduxService(IApplicationReducers _applicationReducers)
+        public ReduxService(
+            IApplicationReducers _applicationReducers,
+            IOfflineService _offlineService)
         {
-            var initialAppState = AppState.CreateEmpty();
+
+            var initialAppState = _offlineService.LoadOfflineAppState();
 
             Store = new Redux.Store<AppState>(reducer: _applicationReducers.ReduceApplication, initialState: initialAppState);
         }

@@ -41,6 +41,7 @@
     <Compile Include="Actions\IServerActionCreators.cs" />
     <Compile Include="Actions\PostUpdateActions.cs" />
     <Compile Include="Actions\ServerActionCreators.cs" />
+    <Compile Include="AkavacheSqliteLinkerOverride.cs" />
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Services\Constants.cs" />
     <Compile Include="IAppBootstrapper.cs" />
@@ -61,9 +62,11 @@
     <Compile Include="Services\ILogService.cs" />
     <Compile Include="Services\IMobileClient.cs" />
     <Compile Include="Services\IMobileService.cs" />
+    <Compile Include="Services\IOfflineService.cs" />
     <Compile Include="Services\IReduxService.cs" />
     <Compile Include="Services\LoginProviders.cs" />
     <Compile Include="Services\MyMobileClient.cs" />
+    <Compile Include="Services\OfflineService.cs" />
     <Compile Include="Services\ReduxService.cs" />
     <Compile Include="Services\ServerExceptions.cs" />
     <Compile Include="States\AppState.cs" />
@@ -133,6 +136,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Akavache, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\akavache.core.4.1.2\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akavache.Sqlite3, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\akavache.sqlite3.4.1.2\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.Sqlite3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
       <Private>True</Private>
@@ -191,6 +202,10 @@
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.1.6.2\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLitePCL.raw, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCL.raw_basic.0.8.6\lib\portable-net45+netcore45+wp8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\SQLitePCL.raw.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

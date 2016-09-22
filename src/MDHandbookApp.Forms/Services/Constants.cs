@@ -21,5 +21,7 @@ namespace MDHandbookApp.Forms.Services
     {
         public const string TestMobileURL = "http://192.168.72.192:55506";
         public const string ProductionMobileURL = "https://handbookmobileappservice.azurewebsites.net/";
+
+        public const string AkavacheApplicationName = "MDHandbookApp";
     }
 }

@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.Practices.Unity;
 using Prism.Logging;
 using Prism.Unity;
 
@@ -72,6 +73,15 @@ namespace MDHandbookApp.Forms
         {
             InitializeComponent();
 
+            var _reduxService = Container.Resolve<IReduxService>();
+            var _mobileService = Container.Resolve<IMobileService>();
+            if(_reduxService.Store.GetState().CurrentState.IsLoggedIn)
+            {
+                var userId = _reduxService.Store.GetState().CurrentState.UserId;
+                var authtoken = _reduxService.Store.GetState().CurrentState.AuthToken;
+                _mobileService.SetAzureUserCredentials(userId, authtoken);
+            }
+
             _appBootstrapper.OnInitializedNavigation(NavigationService);
         }
 
@@ -83,6 +93,13 @@ namespace MDHandbookApp.Forms
         protected override ILoggerFacade CreateLogger()
         {
             return new CustomDebugLogger();
+        }
+
+        protected async override void OnSleep()
+        {
+            var _offlineService = Container.Resolve<IOfflineService>();
+            var _reduxService = Container.Resolve<IReduxService>();
+            await _offlineService.SaveAppState(_reduxService.Store.GetState());
         }
     }
 }

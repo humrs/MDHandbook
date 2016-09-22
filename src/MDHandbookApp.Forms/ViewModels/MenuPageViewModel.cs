@@ -28,8 +28,6 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class MenuPageViewModel : ViewModelBase
     {
-        private bool _networkbusy;
-
         public DelegateCommand NavigateToAboutPage { get; set; }
         public DelegateCommand NavigateToPrivacyPage { get; set; }
         public DelegateCommand NavigateToLoginPage { get; set; }

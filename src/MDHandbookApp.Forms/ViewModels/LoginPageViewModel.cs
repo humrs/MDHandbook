@@ -74,36 +74,25 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task loginTwitter()
         {
-            _logService.Debug("Login Twitter");
             await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Twitter));    
         }
 
         
         private async Task loginMicrosoft()
         {
-            _logService.Debug("Login Microsoft");
             await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Microsoft));
         }
 
         private async Task loginFacebook()
         {
-            _logService.Debug("Login Facebook");
-            await login();
-            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Facebook));
+            await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Facebook));
         }
 
         private async Task loginGoogle()
         {
-            _logService.Debug("Login Google");
-            await login();
-            //await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Google));
+            await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Google));
         }
 
-        private async Task login()
-        {
-            _reduxService.Store.Dispatch(new LoginAction { UserId = "humrs", AuthToken = "token" });
-            //await navigateToMainPage();
-        }
 
         protected override void setupObservables()
         {
@@ -133,11 +122,6 @@ namespace MDHandbookApp.Forms.ViewModels
                 .Subscribe(x => {
                         ShowUnauthorizedMessage = x;
                     });
-        }
-
-        private void doMove()
-        {
-            _logService.Debug("Hello");
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)

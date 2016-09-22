@@ -15,19 +15,19 @@
 //
 
 using System;
-using System.Threading.Tasks;
-using MDHandbookApp.Forms.Actions;
+using System.Runtime.Serialization;
 using MDHandbookApp.Forms.Services;
 using MDHandbookApp.Forms.States;
-using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
 
 
 namespace MDHandbookApp.Forms.ViewModels
 {
+    [DataContract]
     public class BookpagePageViewModel : ViewModelBase
     {
+        
         private string _title;
         public string Title
         {
@@ -35,7 +35,10 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        [IgnoreDataMember]
         private WebViewSource _source;
+
+        [IgnoreDataMember]
         public WebViewSource Source
         {
             get { return _source; }
@@ -51,7 +54,6 @@ namespace MDHandbookApp.Forms.ViewModels
 
         public void WebOnNavigating(object s, WebNavigatingEventArgs e)
         {
-
             string fullpageUrl = e.Url.ToString();
             string fullpageId = "";
 
@@ -72,7 +74,6 @@ namespace MDHandbookApp.Forms.ViewModels
 
         public void WebOnEndNavigating(object s, WebNavigatedEventArgs e)
         {
-            _logService.Debug("InWebOnEndNavigating InBookpagePageViewModel");
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
