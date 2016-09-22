@@ -14,19 +14,16 @@
 //    limitations under the License.
 //
 
-using System.Collections.Immutable;
-using System.Threading.Tasks;
-using MDHandbookApp.Forms.States;
-using MDHandbookAppService.Common.Models.RequestMessages;
+using System;
+using Redux;
 
 
-namespace MDHandbookApp.Forms.Services
+namespace MDHandbookApp.Forms.Actions
 {
-    public interface IOfflineService
+    public class SetIsNetworkDownAction : IAction
     {
-        AppState LoadOfflineAppState();
-        ImmutableList<AppLogItemMessage> LoadOfflineLogStore();
-        Task SaveAppState(AppState state);
-        Task SaveLogStore(ImmutableList<AppLogItemMessage> logstores);
+        public DateTimeOffset NetworkDownLastAttemptDateTime { get; set; }
     }
+
+    public class ClearIsNetworkDownAction : IAction { }
 }

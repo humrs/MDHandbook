@@ -106,17 +106,22 @@ namespace MDHandbookApp.Forms.Actions
 
                 fullupdating = true;
 
-                await doPostUpdates(dispatch, getState);
+                if (!getState().CurrentEventsState.IsNetworkDown)
+                    await doPostUpdates(dispatch, getState);
                 
-                await doGetUpdates(dispatch, getState);
+                if (!getState().CurrentEventsState.IsNetworkDown)
+                    await doGetUpdates(dispatch, getState);
 
-                await doPostUpdates(dispatch, getState);
-
-                await doUploadAppLog(dispatch, getState);
+                if(!getState().CurrentEventsState.IsNetworkDown)
+                    await doPostUpdates(dispatch, getState);
+                    
+                if(!getState().CurrentEventsState.IsNetworkDown)
+                    await doUploadAppLog(dispatch, getState);
 
                 //await _offlineService.SaveAppState(_reduxService.Store.GetState());
 
                 fullupdating = false;
+                dispatch(new ClearIsNetworkBusyAction());
             };
         }
 
@@ -227,7 +232,7 @@ namespace MDHandbookApp.Forms.Actions
             {
                 if (ex is ServerExceptions.NetworkFailure)
                 {
-                    // Do Nothing extra
+                    dispatch(new SetIsNetworkDownAction { NetworkDownLastAttemptDateTime = DateTimeOffset.Now });
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
@@ -289,7 +294,7 @@ namespace MDHandbookApp.Forms.Actions
                 token = null;
                 if (ex is ServerExceptions.NetworkFailure)
                 {
-                    // Do Nothing extra
+                    dispatch(new SetIsNetworkDownAction { NetworkDownLastAttemptDateTime = DateTimeOffset.Now });
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
@@ -352,7 +357,7 @@ namespace MDHandbookApp.Forms.Actions
             {
                 if (ex is ServerExceptions.NetworkFailure)
                 {
-                    // Do Nothing extra
+                    dispatch(new SetIsNetworkDownAction { NetworkDownLastAttemptDateTime = DateTimeOffset.Now });
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
@@ -376,7 +381,8 @@ namespace MDHandbookApp.Forms.Actions
             }
             finally
             {
-                messages.Clear();
+                if(messages != null)
+                    messages.Clear();
             }
 
             dispatch(new ClearIsNetworkBusyAction());

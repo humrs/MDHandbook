@@ -66,7 +66,8 @@ namespace MDHandbookApp.Forms
         private IObservable<bool> islicenced;
         private IObservable<bool> islicencekeyset;
         private IObservable<bool> canchecklicencekey;
-        private IObservable<Timestamped<long>> networkready;
+        private IObservable<bool> isnetworkdown;
+
 
         public static IAuthenticate Authenticator { get; private set; }
 
@@ -137,7 +138,10 @@ namespace MDHandbookApp.Forms
                         await refreshToken();
                     });
 
-            
+            Observable
+                .Interval(TimeSpan.FromHours(1))
+                .Subscribe(
+                    x => _reduxService.Store.Dispatch(new ClearIsNetworkDownAction()));
         }
 
         private void setupObservables()
@@ -156,7 +160,12 @@ namespace MDHandbookApp.Forms
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLicenceKeySet })
                 .Select(d => d.CurrentState.IsLicenceKeySet);
 
-            canchecklicencekey = isloggedin
+            isnetworkdown = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkDown })
+                .Select(d => d.CurrentEventsState.IsNetworkDown);
+
+            canchecklicencekey = isnetworkdown
+                .CombineLatest(isloggedin, (x, y) => !x && y)
                 .CombineLatest(islicencekeyset, (x, y) => x && y)
                 .CombineLatest(islicenced, (x, y) => x && !y);
         }
@@ -199,6 +208,7 @@ namespace MDHandbookApp.Forms
             Container.RegisterType<IFullpageReducers, FullpageReducers>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IHandbookStateReducers, HandbookStateReducers>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IPostUpdateStateReducers, PostUpdateStateReducers>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IEventsStateReducers, EventsStateReducers>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IApplicationReducers, ApplicationReducers>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<IReduxService, ReduxService>(new ContainerControlledLifetimeManager());

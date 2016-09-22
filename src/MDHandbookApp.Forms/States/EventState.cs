@@ -19,33 +19,33 @@ using System;
 
 namespace MDHandbookApp.Forms.States
 {
-    public class EventStates
+    public class EventsState
     {
         public bool IsNetworkDown { get; set; }
         public DateTimeOffset LastNetworkAttempt { get; set; }
 
 
-        public EventStates()
+        public EventsState()
         {
 
         }
 
-        protected EventStates(EventStates old)
+        protected EventsState(EventsState old)
         {
             this.IsNetworkDown = old.IsNetworkDown;
             this.LastNetworkAttempt = old.LastNetworkAttempt;
         }
 
 
-        public EventStates Clone()
+        public EventsState Clone()
         {
-            return new EventStates(this);
+            return new EventsState(this);
         }
 
 
-        public static EventStates CreateEmpty()
+        public static EventsState CreateEmpty()
         {
-            return new EventStates {
+            return new EventsState {
                 IsNetworkDown = false,
                 LastNetworkAttempt = new System.DateTimeOffset(1970, 1, 1, 0, 0, 0, new System.TimeSpan(-5, 0, 0)),
             };

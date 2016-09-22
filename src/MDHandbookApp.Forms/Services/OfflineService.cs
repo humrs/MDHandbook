@@ -14,17 +14,13 @@
 //    limitations under the License.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Akavache;
-using MDHandbookAppService.Common.Models.RequestMessages;
 using MDHandbookApp.Forms.States;
-using Splat;
+using MDHandbookAppService.Common.Models.RequestMessages;
+
 
 namespace MDHandbookApp.Forms.Services
 {
@@ -52,6 +48,7 @@ namespace MDHandbookApp.Forms.Services
             var initialBooks = BlobCache.UserAccount.GetObject<ImmutableDictionary<string, Book>>("books").Catch(Observable.Return(AppState.CreateEmptyBooks())).Wait();
             var initialFullpages = BlobCache.UserAccount.GetObject<ImmutableDictionary<string, Fullpage>>("fullpages").Catch(Observable.Return(AppState.CreateEmptyFullpages())).Wait();
             var initialCurrentPostUpdateState = BlobCache.UserAccount.GetObject<PostUpdateState>("currentpostupdatestate").Catch(Observable.Return(AppState.CreateEmptyPostUpdateState())).Wait();
+            var initialEventsState = EventsState.CreateEmpty();
 
             initialCurrentState.HasLicensedError = false;
             initialCurrentState.HasUnauthorizedError = false;
@@ -61,7 +58,8 @@ namespace MDHandbookApp.Forms.Services
                 Books = initialBooks,
                 Fullpages = initialFullpages,
                 CurrentPostUpdateState = initialCurrentPostUpdateState,
-                CurrentState = initialCurrentState
+                CurrentState = initialCurrentState,
+                CurrentEventsState = initialEventsState
             };
 
             return initialState;

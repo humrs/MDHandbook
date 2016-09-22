@@ -26,17 +26,20 @@ namespace MDHandbookApp.Forms.Reducers
         private IFullpageReducers        _fullpageReducers;
         private IHandbookStateReducers   _handbookStateReducers;
         private IPostUpdateStateReducers _postUpdateStateReducers;
+        private IEventsStateReducers     _eventsStateReducers;
 
         public ApplicationReducers(
             IBookReducers bookReducers,
             IFullpageReducers fullpageReducers,
             IHandbookStateReducers handbookStateReducers,
-            IPostUpdateStateReducers postUpdateStateReducers)
+            IPostUpdateStateReducers postUpdateStateReducers,
+            IEventsStateReducers eventsStateReducers)
         {
             _bookReducers = bookReducers;
             _fullpageReducers = fullpageReducers;
             _handbookStateReducers = handbookStateReducers;
             _postUpdateStateReducers = postUpdateStateReducers;
+            _eventsStateReducers = eventsStateReducers;
         }
 
 
@@ -46,7 +49,8 @@ namespace MDHandbookApp.Forms.Reducers
                 Books = _bookReducers.BookReducer(previousState.Books, action),
                 Fullpages = _fullpageReducers.FullpageReducer(previousState.Fullpages, action),
                 CurrentPostUpdateState = _postUpdateStateReducers.PostUpdateStateReducer(previousState.CurrentPostUpdateState, action),
-                CurrentState = _handbookStateReducers.HandbookStateReducer(previousState.CurrentState, action)
+                CurrentState = _handbookStateReducers.HandbookStateReducer(previousState.CurrentState, action),
+                CurrentEventsState = _eventsStateReducers.EventsStateReducer(previousState.CurrentEventsState, action)
             };
         }
     }

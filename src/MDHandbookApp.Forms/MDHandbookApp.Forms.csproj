@@ -36,12 +36,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actions\BookActions.cs" />
+    <Compile Include="Actions\EventsStateActions.cs" />
     <Compile Include="Actions\FullpageActions.cs" />
     <Compile Include="Actions\HandbookStateActions.cs" />
     <Compile Include="Actions\IServerActionCreators.cs" />
     <Compile Include="Actions\PostUpdateActions.cs" />
     <Compile Include="Actions\ServerActionCreators.cs" />
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
+    <Compile Include="Reducers\EventsStateReducers.cs" />
+    <Compile Include="Reducers\IEventsStateReducers.cs" />
     <Compile Include="Services\Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reducers\ApplicationReducers.cs" />
@@ -73,7 +76,7 @@
     <Compile Include="Services\ServerExceptions.cs" />
     <Compile Include="States\AppState.cs" />
     <Compile Include="States\Book.cs" />
-    <Compile Include="States\EventStates.cs" />
+    <Compile Include="States\EventState.cs" />
     <Compile Include="States\Fullpage.cs" />
     <Compile Include="States\HandbookState.cs" />
     <Compile Include="States\PostUpdateState.cs" />

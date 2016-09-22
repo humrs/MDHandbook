@@ -25,6 +25,7 @@ namespace MDHandbookApp.Forms.States
         public ImmutableDictionary<string, Fullpage> Fullpages { get; set; }
         public PostUpdateState CurrentPostUpdateState { get; set; }
         public HandbookState CurrentState { get; set; }
+        public EventsState CurrentEventsState { get; set; }
 
         public static AppState CreateEmpty()
         {
@@ -32,7 +33,8 @@ namespace MDHandbookApp.Forms.States
                 Books = ImmutableDictionary<string, Book>.Empty,
                 Fullpages = ImmutableDictionary<string, Fullpage>.Empty,
                 CurrentPostUpdateState = PostUpdateState.CreateEmpty(),
-                CurrentState = HandbookState.CreateEmpty()
+                CurrentState = HandbookState.CreateEmpty(),
+                CurrentEventsState = EventsState.CreateEmpty()
             };
         }
 
@@ -54,6 +56,11 @@ namespace MDHandbookApp.Forms.States
         public static HandbookState CreateEmptyHandbookState()
         {
             return HandbookState.CreateEmpty();
+        }
+
+        public static EventsState CreateEmtpyEventsState()
+        {
+            return EventsState.CreateEmpty();
         }
     }
 

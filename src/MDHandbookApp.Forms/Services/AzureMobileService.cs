@@ -263,10 +263,10 @@ namespace MDHandbookApp.Forms.Services
                             _logService.InfoException("PostUpdates response code: Unauthorized", ex);
                             throw new ServerExceptions.Unauthorized();
                         case HttpStatusCode.BadRequest:
-                        _logService.InfoException(string.Format("PostUpdates response code: BadRequest: {0}", await response.Content.ReadAsStringAsync()), ex);
+                            _logService.InfoException(string.Format("PostUpdates response code: BadRequest: {0}", await response.Content.ReadAsStringAsync()), ex);
                             throw new ServerExceptions.ActionFailure();
                         default:
-                        _logService.InfoException(string.Format("PostUpdates response code: UnknownFailure: {0}", await response.Content.ReadAsStringAsync()), ex);
+                            _logService.InfoException(string.Format("PostUpdates response code: UnknownFailure: {0}", await response.Content.ReadAsStringAsync()), ex);
                             throw new ServerExceptions.UnknownFailure(ex);
                     }
                 }

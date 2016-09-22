@@ -14,19 +14,14 @@
 //    limitations under the License.
 //
 
-using System.Collections.Immutable;
-using System.Threading.Tasks;
 using MDHandbookApp.Forms.States;
-using MDHandbookAppService.Common.Models.RequestMessages;
+using Redux;
 
 
-namespace MDHandbookApp.Forms.Services
+namespace MDHandbookApp.Forms.Reducers
 {
-    public interface IOfflineService
+    public interface IEventsStateReducers
     {
-        AppState LoadOfflineAppState();
-        ImmutableList<AppLogItemMessage> LoadOfflineLogStore();
-        Task SaveAppState(AppState state);
-        Task SaveLogStore(ImmutableList<AppLogItemMessage> logstores);
+        EventsState EventsStateReducer(EventsState previousState, IAction action);
     }
 }
