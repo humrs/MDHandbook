@@ -41,9 +41,9 @@ namespace MDHandbookApp.Forms.Services
             return BlobCache.UserAccount.GetObject<ImmutableList<AppLogItemMessage>>("logstore").Catch(Observable.Return(ImmutableList<AppLogItemMessage>.Empty)).Wait();
         }
 
-        public void SaveLogStore(ImmutableList<AppLogItemMessage> logstores)
+        public async Task SaveLogStore(ImmutableList<AppLogItemMessage> logstores)
         {
-            BlobCache.UserAccount.InsertObject("logstore", logstores).Wait();
+            await BlobCache.UserAccount.InsertObject("logstore", logstores);
         }
 
         public AppState LoadOfflineAppState()

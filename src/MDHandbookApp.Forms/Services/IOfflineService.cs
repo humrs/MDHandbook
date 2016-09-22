@@ -10,6 +10,6 @@ namespace MDHandbookApp.Forms.Services
         AppState LoadOfflineAppState();
         ImmutableList<AppLogItemMessage> LoadOfflineLogStore();
         Task SaveAppState(AppState state);
-        void SaveLogStore(ImmutableList<AppLogItemMessage> logstores);
+        Task SaveLogStore(ImmutableList<AppLogItemMessage> logstores);
     }
 }

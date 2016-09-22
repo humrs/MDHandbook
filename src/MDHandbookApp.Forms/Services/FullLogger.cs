@@ -15,18 +15,32 @@
 //
 
 using System;
+using MDHandbookAppService.Common.Models.RequestMessages;
 using Prism.Logging;
 
 
 namespace MDHandbookApp.Forms.Services
 {
-    public class CustomDebugLogger : IMyLogger
+    public class FullLogger : IMyLogger
     {
+        private ILogStoreService _logStoreService;
+
+        public FullLogger(
+            ILogStoreService logStoreService)
+        {
+            _logStoreService = logStoreService;
+        }
+
         public void Log(string message, Category category, Priority priority)
         {
             var dt = DateTimeOffset.UtcNow;
+            var item = new AppLogItemMessage {
+                LogDateTime = dt.ToString("O"),
+                LogName = string.Format($"{category}:{priority}"),
+                LogDataJson = string.Format($"{message}")
+            };
 
-            System.Diagnostics.Debug.WriteLine($"{dt:o}:{category}:{priority}::  {message}");
+            _logStoreService.AddItem(item);
         }
     }
 }
