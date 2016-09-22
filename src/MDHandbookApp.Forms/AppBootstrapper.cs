@@ -32,6 +32,34 @@ namespace MDHandbookApp.Forms
 {
     public class AppBootstrapper : IAppBootstrapper
     {
+
+#if DEBUG
+        private static TimeSpan updateInterval = TimeSpan.FromSeconds(10);
+        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(60);
+        private const int MinimumRefreshTokenPeriodInDays = 1;
+#else
+        private static TimeSpan updateInterval = TimeSpan.FromHours(6);
+        private static TimeSpan refreshTokenInterval = TimeSpan.FromHours(24);
+        private const int MinimumRefreshTokenPeriodInDays = 15;
+#endif
+
+        private static TimeSpan throttleTime = TimeSpan.FromMilliseconds(100);
+
+        private const string JWTExpiryTimeKey = "exp";
+
+        private IReduxService _reduxService = null;
+        private IServerActionCreators _serverActionCreators = null;
+        private ILogService _logService = null;
+
+        private IObservable<bool> isloggedin;
+        private IObservable<bool> islicenced;
+        private IObservable<bool> islicencekeyset;
+        private IObservable<bool> canchecklicencekey;
+
+        public AppBootstrapper()
+        {
+        }
+
         public void OnInitializedNavigation(INavigationService _nav)
         {
             _nav.NavigateAsync(ViewModels.Constants.MainPageAbsUrl, animated: false);
@@ -71,27 +99,22 @@ namespace MDHandbookApp.Forms
             _container.RegisterType<IServerActionCreators, ServerActionCreators>(new ContainerControlledLifetimeManager());
         }
 
-        private static TimeSpan throttleTime = TimeSpan.FromMilliseconds(100);
-        private static TimeSpan updateInterval = TimeSpan.FromHours(2);
-        private static TimeSpan refreshTokenInterval = TimeSpan.FromHours(20);
-        private const string JWTExpiryTimeKey = "exp";
-        private const int MinimumRefreshTokenPeriodInDays = 15;
 
-        private IReduxService _reduxService = null;
-        private IServerActionCreators _serverActionCreators = null;
-        private ILogService _logService = null;
 
-        private IObservable<bool> isloggedin;
-        private IObservable<bool> islicenced;
-        private IObservable<bool> islicencekeyset;
-        private IObservable<bool> canchecklicencekey;
-
-        public void SetupObservables(IUnityContainer _container)
+        public void SetupObservablesAndSubscriptions(IUnityContainer _container)
         {
             _reduxService = _reduxService ?? _container.Resolve<IReduxService>();
             _serverActionCreators = _serverActionCreators ?? _container.Resolve<IServerActionCreators>();
             _logService = _logService ?? _container.Resolve<ILogService>();
 
+            setupObservables(_container);
+
+            setupSubscriptions(_container);
+
+        }
+
+        private void setupObservables(IUnityContainer _container)
+        {
             isloggedin = _reduxService.Store
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
                 .Select(d => d.CurrentState.IsLoggedIn);
@@ -107,12 +130,9 @@ namespace MDHandbookApp.Forms
             canchecklicencekey = isloggedin
                 .CombineLatest(islicencekeyset, (x, y) => x && y)
                 .CombineLatest(islicenced, (x, y) => x && !y);
-
         }
 
-        
-
-        public void SetupSubscriptions(IUnityContainer _container)
+        private void setupSubscriptions(IUnityContainer _container)
         {
             
             canchecklicencekey
@@ -173,9 +193,7 @@ namespace MDHandbookApp.Forms
             return (duration.TotalDays < MinimumRefreshTokenPeriodInDays);
         }
 
-        public AppBootstrapper()
-        {
-        }
+
 
     }
 }

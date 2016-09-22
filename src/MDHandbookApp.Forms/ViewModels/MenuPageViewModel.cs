@@ -19,10 +19,10 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
-using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Navigation;
 using ReactiveUI;
+
 
 namespace MDHandbookApp.Forms.ViewModels
 {

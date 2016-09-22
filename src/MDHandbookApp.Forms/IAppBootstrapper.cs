@@ -25,7 +25,6 @@ namespace MDHandbookApp.Forms
         void InitializeMDHandbookServices(IUnityContainer _container);
         void OnInitializedNavigation(INavigationService _nav);
         void RegisterTypes(IUnityContainer _container);
-        void SetupObservables(IUnityContainer _container);
-        void SetupSubscriptions(IUnityContainer _container);
+        void SetupObservablesAndSubscriptions(IUnityContainer _container);
     }
 }

@@ -25,6 +25,7 @@ using Prism.Logging;
 using Prism.Navigation;
 using ReactiveUI;
 
+
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class OptionsPageViewModel : ViewModelBase

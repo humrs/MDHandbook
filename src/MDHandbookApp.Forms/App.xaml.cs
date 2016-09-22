@@ -65,9 +65,7 @@ namespace MDHandbookApp.Forms
 
             _appBootstrapper.InitializeMDHandbookServices(Container);
 
-            _appBootstrapper.SetupObservables(Container);
-
-            _appBootstrapper.SetupSubscriptions(Container);
+            _appBootstrapper.SetupObservablesAndSubscriptions(Container);
         }
 
         protected override void OnInitialized()

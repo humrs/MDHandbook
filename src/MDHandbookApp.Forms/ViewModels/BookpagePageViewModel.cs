@@ -23,6 +23,7 @@ using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
 
+
 namespace MDHandbookApp.Forms.ViewModels
 {
     public class BookpagePageViewModel : ViewModelBase
