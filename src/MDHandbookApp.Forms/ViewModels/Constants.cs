@@ -30,7 +30,12 @@ namespace MDHandbookApp.Forms.ViewModels
         public const string LoginPageRelUrl = "NavPage/LoginPage";
         public const string LicenceErrorPageRelUrl = "NavPage/LicenceErrorPage";
         public const string AboutPageRelUrl = "NavPage/AboutPage";
+        public const string BookpagePageAbsUrl = "/MenuPage/NavPage/BookpagePage";
+        public const string BookpagePageRelUrl = "BookpagePage";
 
+        public const string BookpagePageUrlParamId = "starting";
+        public const string WebpageUrlWebStartId = "http";
+        public const string WebpageUrlHybridStartId = "hybrid://";
 
     }
 }

@@ -28,7 +28,7 @@ Usage information is used to improve the provision of educational material and i
 For further information contact the maintainer at:
       </Label>
       <Label x:Name="githubLink" TextColor="Blue">
-        https://github.com/humrs/MDHandbookApp/
+        https://github.com/humrs/MDHandbook/
       </Label>
       <Label FontSize="Medium" Margin="0,20,0,20">
 R. Stanley Hum

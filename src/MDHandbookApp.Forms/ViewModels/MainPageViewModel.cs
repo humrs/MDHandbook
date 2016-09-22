@@ -15,6 +15,8 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
@@ -68,12 +70,27 @@ namespace MDHandbookApp.Forms.ViewModels
             get { return _showBookList; }
             set { SetProperty(ref _showBookList, value); }
         }
+
+        private string _updateTime = "";
+        public string UpdateTime
+        {
+            get { return _updateTime; }
+            set { SetProperty(ref _updateTime, value); }
+        }
+
+        private List<BookTileViewModel> _handbooks;
+        public List<BookTileViewModel> Handbooks
+        {
+            get { return _handbooks; }
+            set { SetProperty(ref _handbooks, value); }
+        }
         
         public MainPageViewModel(
             ILogService logService,
             INavigationService navigationService,
             IReduxService reduxService) : base(logService, navigationService, reduxService)
         {
+            Handbooks = new List<BookTileViewModel>();
             NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
             NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
         }
@@ -106,6 +123,28 @@ namespace MDHandbookApp.Forms.ViewModels
 
         protected override void setupSubscriptions()
         {
+            _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.LastUpdateTime })
+                .Select(u => $"Last Updated: {u.CurrentState.LastUpdateTime.ToLocalTime()}")
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        UpdateTime = x;
+                    });
+
+            _reduxService.Store
+                .DistinctUntilChanged(state => new { state.Books })
+                .Select(d => d.Books.Values.OrderBy(y => y.OrderIndex).ToList())
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    xs => {
+                        var newlist = new List<BookTileViewModel>();
+                        newlist.AddRange(xs.Select(x => new BookTileViewModel(x, _logService, _navigationService)));
+                        Handbooks.Clear();
+                        Handbooks = newlist;
+                    });
+
             isloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)

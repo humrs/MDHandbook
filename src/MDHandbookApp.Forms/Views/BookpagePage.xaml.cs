@@ -14,6 +14,12 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using MDHandbookApp.Forms.ViewModels;
+using ReactiveUI;
 using Xamarin.Forms;
 
 
@@ -24,6 +30,18 @@ namespace MDHandbookApp.Forms.Views
         public BookpagePage()
         {
             InitializeComponent();
+        }
+
+        public void webOnNavigating(object s, WebNavigatingEventArgs e)
+        {
+            var _vm = (BookpagePageViewModel) this.BindingContext;
+            _vm.WebOnNavigating(s, e);
+        }
+
+        public void webOnEndNavigating(object s, WebNavigatedEventArgs e)
+        {
+            var _vm = (BookpagePageViewModel) this.BindingContext;
+            _vm.WebOnEndNavigating(s, e);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace MDHandbookApp.Forms.Actions
         private bool verifyingLicenceKey = false;
         private bool refreshingToken = false;
         private bool postingUpdateData = false;
-        private bool loadingAppLog = false;
+        private bool uploadingAppLog = false;
         private bool fullupdating = false;
         private bool resettingUpdates = false;
 
@@ -61,23 +61,41 @@ namespace MDHandbookApp.Forms.Actions
         public AsyncActionsCreator<AppState> LoginAction(LoginProviders provider)
         {
             return async (dispatch, getState) => {
-
                 await doLogin(dispatch, getState, provider);
-
             };
-        }
-        
-        public AsyncActionsCreator<AppState> ServerVerifyLicenceKeyAction()
+        }     
+
+        public AsyncActionsCreator<AppState> VerifyLicenceKeyAction(string licencekey)
         {
             return async (dispatch, getState) => {
+                await doVerifyLicenceKey(dispatch, getState, licencekey);
+            };
+        }
 
-                await doVerifyLicenceKey(dispatch, getState);
+        public AsyncActionsCreator<AppState> RefreshTokenAction()
+        {
+            return async (dispatch, getState) => {
+                await doRefreshToken(dispatch, getState);
+            };
+        }
 
+        public AsyncActionsCreator<AppState> LogoutAction()
+        {
+            return async (dispatch, getState) => {
+                await doLogout(dispatch, getState);
+            };
+        }
+
+        public AsyncActionsCreator<AppState> ResetLicenceKeyAction()
+        {
+            return async (dispatch, getState) => {
+                await doResetLicenceKey(dispatch, getState);
             };
         }
 
 
-        public AsyncActionsCreator<AppState> ServerFullUpdateAction()
+
+        public AsyncActionsCreator<AppState> FullUpdateAction()
         {
             return async (dispatch, getState) => {
 
@@ -94,7 +112,7 @@ namespace MDHandbookApp.Forms.Actions
 
                 await doPostUpdates(dispatch, getState);
 
-                await doLoadAppLog(dispatch, getState);
+                await doUploadAppLog(dispatch, getState);
 
                 //await _offlineService.SaveAppState(_reduxService.Store.GetState());
 
@@ -102,46 +120,34 @@ namespace MDHandbookApp.Forms.Actions
             };
         }
 
-        public AsyncActionsCreator<AppState> ServerGetUpdateAction()
+
+        public AsyncActionsCreator<AppState> GetUpdatesAction()
         {
             return async (dispatch, getState) => {
-
                 await doGetUpdates(dispatch, getState);
-
             };
         }
 
-        public AsyncActionsCreator<AppState> ServerRefreshTokenAction()
+        public AsyncActionsCreator<AppState> UploadAppLogAction()
         {
             return async (dispatch, getState) => {
-                
-                await doRefreshToken(dispatch, getState);
-                
+                await doUploadAppLog(dispatch, getState);
             };
         }
 
-        public AsyncActionsCreator<AppState> ServerPostUpdateAction()
+        public AsyncActionsCreator<AppState> PostUpdatesAction()
         {
             return async (dispatch, getState) => {
-
                 await doPostUpdates(dispatch, getState);
-
             };
         }
 
-        public AsyncActionsCreator<AppState> ServerLoadAppLogAction()
+
+
+        public AsyncActionsCreator<AppState> RefreshContentsAction()
         {
             return async (dispatch, getState) => {
-
-                await doLoadAppLog(dispatch, getState);
-
-            };
-        }
-
-        public AsyncActionsCreator<AppState> ServerResetUpdatesAction()
-        {
-            return async (dispatch, getState) => {
-                await doResetUpdates(dispatch, getState);
+                await doRefreshContents(dispatch, getState);
             };
         }
          
@@ -163,8 +169,6 @@ namespace MDHandbookApp.Forms.Actions
             
             var success = await _mobileService.Authenticate(provider);
 
-            _logService.Debug($"Authenticate: {success}");
-
             if (success)
             {
                 var userId = _mobileService.GetUserId();
@@ -173,34 +177,40 @@ namespace MDHandbookApp.Forms.Actions
                     UserId = userId,
                     AuthToken = token
                 });
-
                 _mobileService.SetAzureUserCredentials(userId, token);
+
+                await doVerifyLicenceKey(dispatch, getState, getState().CurrentState.LicenceKey);
             }
             else
             {
                 dispatch(new LogoutAction());
             }
 
+            dispatch(new ClearIsNetworkBusyAction());
             loggingIn = false;
             httpClientAvailable = true;
         }
 
-        private async Task doVerifyLicenceKey(Dispatcher dispatch, Func<AppState> getState)
+        private async Task doVerifyLicenceKey(Dispatcher dispatch, Func<AppState> getState, string licencekey = null)
         {
-            if (!getState().CurrentState.IsLoggedIn || verifyingLicenceKey || !httpClientAvailable)
-            {
+            var candidateLicenceKey = licencekey ?? getState().CurrentState.LicenceKey;
+
+            if (string.IsNullOrEmpty(candidateLicenceKey))
                 return;
-            }
+            
+            if (!getState().CurrentState.IsLoggedIn || verifyingLicenceKey || !httpClientAvailable)
+                return;
 
             httpClientAvailable = false;
             verifyingLicenceKey = true;
+
             dispatch(new SetIsNetworkBusyAction());
 
             bool success = false;
 
             try
             {
-                VerifyLicenceKeyMessage vlkm = new VerifyLicenceKeyMessage { LicenceKey = getState().CurrentState.LicenceKey };
+                VerifyLicenceKeyMessage vlkm = new VerifyLicenceKeyMessage { LicenceKey = candidateLicenceKey };
                 success = await _mobileService.VerifyLicenceKey(vlkm);
 
                 if (success)
@@ -242,9 +252,82 @@ namespace MDHandbookApp.Forms.Actions
             }
 
             dispatch(new ClearIsNetworkBusyAction());
+
             verifyingLicenceKey = false;
             httpClientAvailable = true;
         }
+
+        private async Task doRefreshToken(Dispatcher dispatch, Func<AppState> getState)
+        {
+
+            if (!getState().CurrentState.IsLoggedIn || refreshingToken)
+                return;
+
+            refreshingToken = true;
+
+            dispatch(new SetIsNetworkBusyAction());
+
+            string token = null;
+            try
+            {
+                token = await _mobileService.RefreshToken();
+
+                if (token != null)
+                {
+                    dispatch(new SetRefreshTokenAction { Token = token });
+                    var userId = _mobileService.GetUserId();
+                    _mobileService.SetAzureUserCredentials(userId, token);
+                }
+                else
+                {
+                    dispatch(new SetHasUnauthorizedErrorAction());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                token = null;
+                if (ex is ServerExceptions.NetworkFailure)
+                {
+                    // Do Nothing extra
+                }
+                else if (ex is ServerExceptions.ActionFailure)
+                {
+                    dispatch(new SetHasUnauthorizedErrorAction());
+                }
+                else if (ex is ServerExceptions.Unauthorized)
+                {
+                    dispatch(new SetHasUnauthorizedErrorAction());
+                }
+                else if (ex is ServerExceptions.UnknownFailure)
+                {
+                    dispatch(new SetHasUnauthorizedErrorAction());
+                    if (ex.InnerException != null)
+                    {
+                        //Log inner Exception
+                    }
+                }
+                else
+                {
+                    dispatch(new SetHasUnauthorizedErrorAction());
+                    //Log Unknown Exception
+                }
+            }
+
+            dispatch(new ClearIsNetworkBusyAction());
+            refreshingToken = false;
+        }
+
+        private async Task doLogout(Dispatcher dispatch, Func<AppState> getState)
+        {
+            await Task.Run(() => { dispatch(new LogoutAction()); });
+        }
+
+        private async Task doResetLicenceKey(Dispatcher dispatch, Func<AppState> getState)
+        {
+            await Task.Run(() => { dispatch(new ClearLicensedAction()); });
+        }
+
 
 
         private async Task doGetUpdates(Dispatcher dispatch, Func<AppState> getState)
@@ -300,44 +383,40 @@ namespace MDHandbookApp.Forms.Actions
             updatingData = false;
         }
 
-        private async Task doRefreshToken(Dispatcher dispatch, Func<AppState> getState)
+        private async Task doUploadAppLog(Dispatcher dispatch, Func<AppState> getState)
         {
 
-            if (!getState().CurrentState.IsLoggedIn || refreshingToken)
+            if (!getState().CurrentState.IsLicensed || uploadingAppLog)
             {
                 return;
             }
-            
-            refreshingToken = true;
+
+            uploadingAppLog = true;
+
             dispatch(new SetIsNetworkBusyAction());
 
-            string token = null;
+            bool success = false;
+
+            List<AppLogItemMessage> items = new List<AppLogItemMessage>(); // TODO: _logStoreService.LogStore.ToList();
+
             try
             {
-                token = await _mobileService.RefreshToken();
+                success = await _mobileService.LoadAppLog(items);
 
-                if (token != null)
+                if (success)
                 {
-                    dispatch(new SetRefreshTokenAction { Token = token });
-                    var userId = _mobileService.GetUserId();
-                    _mobileService.SetAzureUserCredentials(userId, token);
+                    //_logStoreService.Clear();
                 }
-                else
-                {
-                    dispatch(new SetHasUnauthorizedErrorAction());
-                }
-
             }
             catch (Exception ex)
             {
-                token = null;
                 if (ex is ServerExceptions.NetworkFailure)
                 {
-                    // Do Nothing extra
+                    // pass
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
@@ -345,7 +424,6 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
                     if (ex.InnerException != null)
                     {
                         //Log inner Exception
@@ -353,13 +431,16 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
                     //Log Unknown Exception
                 }
             }
+            finally
+            {
+                items.Clear();
+            }
 
             dispatch(new ClearIsNetworkBusyAction());
-            refreshingToken = false;
+            uploadingAppLog = false;
         }
 
         private async Task doPostUpdates(Dispatcher dispatch, Func<AppState> getState)
@@ -415,67 +496,8 @@ namespace MDHandbookApp.Forms.Actions
             postingUpdateData = false;
         }
 
-        private async Task doLoadAppLog(Dispatcher dispatch, Func<AppState> getState)
-        {
 
-            if (!getState().CurrentState.IsLicensed || loadingAppLog)
-            {
-                return;
-            }
-
-            loadingAppLog = true;
-
-            dispatch(new SetIsNetworkBusyAction());
-
-            bool success = false;
-            
-            List<AppLogItemMessage> items =  new List<AppLogItemMessage>(); // _logStoreService.LogStore.ToList();
-
-            try
-            {
-                success = await _mobileService.LoadAppLog(items);
-
-                if (success)
-                {
-                    //_logStoreService.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex is ServerExceptions.NetworkFailure)
-                {
-                    // pass
-                }
-                else if (ex is ServerExceptions.ActionFailure)
-                {
-
-                }
-                else if (ex is ServerExceptions.Unauthorized)
-                {
-                    dispatch(new SetHasUnauthorizedErrorAction());
-                }
-                else if (ex is ServerExceptions.UnknownFailure)
-                {
-                    if (ex.InnerException != null)
-                    {
-                        //Log inner Exception
-                    }
-                }
-                else
-                {
-                    //Log Unknown Exception
-                }
-            }
-            finally
-            {
-                items.Clear();
-            }
-
-            dispatch(new ClearIsNetworkBusyAction());
-            loadingAppLog = false;
-        }
-
-        private async Task doResetUpdates(Dispatcher dispatch, Func<AppState> getState)
+        private async Task doRefreshContents(Dispatcher dispatch, Func<AppState> getState)
         {
             if (!getState().CurrentState.IsLicensed || resettingUpdates)
             {
@@ -493,7 +515,7 @@ namespace MDHandbookApp.Forms.Actions
 
                 if(success)
                 {
-                    await _reduxService.Store.Dispatch(this.ServerFullUpdateAction());
+                    await _reduxService.Store.Dispatch(this.FullUpdateAction());
                 }
             }
             catch (Exception ex)
@@ -526,6 +548,8 @@ namespace MDHandbookApp.Forms.Actions
             dispatch(new ClearIsNetworkBusyAction());
             resettingUpdates = false;
         }
+
+
 
         private void processServerUpdateMessages(List<ServerUpdateMessage> messages)
         {

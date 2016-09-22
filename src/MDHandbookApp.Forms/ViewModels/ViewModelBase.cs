@@ -15,6 +15,7 @@
 //
 
 using System.Threading.Tasks;
+using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -27,16 +28,19 @@ namespace MDHandbookApp.Forms.ViewModels
         protected ILogService _logService;
         protected INavigationService _navigationService;
         protected IReduxService _reduxService;
+        protected IServerActionCreators _serverActionCreators;
 
 
         public ViewModelBase(
             ILogService logService = null,
             INavigationService navigationService = null,
-            IReduxService reduxService = null)
+            IReduxService reduxService = null,
+            IServerActionCreators serverActionCreators = null)
         {
             _logService = logService;
             _navigationService = navigationService;
             _reduxService = reduxService;
+            _serverActionCreators = serverActionCreators;
         }
 
         protected virtual async Task navigateToMainPage()

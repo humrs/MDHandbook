@@ -7,8 +7,11 @@
              Title="Set Licence Key">
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text="Please enter your licence key." />
-    <Entry Placeholder="Licence Key" />
-    <Button Text="Set Licence Key" Command="{Binding SetLicenceKey}" />
+    <Label Text="You are licenced." IsVisible="{Binding ShowLicencedMessage}" />
+    <Label Text="You are not licenced." IsVisible="{Binding EnableSetLicenceKeyButton}" />
+    <Label Text="Unable to authorize licence key. Please try again" IsVisible="{Binding ShowUnauthorizedMessage}" />
+    <Entry  Text="{Binding LicenceKeyString}" Placeholder="Licence Key" IsEnabled="{Binding EnableSetLicenceKeyButton}"/>
+    <Button Text="Set Licence Key" Command="{Binding SetLicenceKey}" IsEnabled="{Binding EnableSetLicenceKeyButton}" />
     <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />
   </StackLayout>
 </ContentPage>

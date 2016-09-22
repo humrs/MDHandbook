@@ -24,12 +24,17 @@ namespace MDHandbookApp.Forms.Actions
     public interface IServerActionCreators
     {
         AsyncActionsCreator<AppState> LoginAction(LoginProviders provider);
-        AsyncActionsCreator<AppState> ServerFullUpdateAction();
-        AsyncActionsCreator<AppState> ServerGetUpdateAction();
-        AsyncActionsCreator<AppState> ServerLoadAppLogAction();
-        AsyncActionsCreator<AppState> ServerPostUpdateAction();
-        AsyncActionsCreator<AppState> ServerRefreshTokenAction();
-        AsyncActionsCreator<AppState> ServerResetUpdatesAction();
-        AsyncActionsCreator<AppState> ServerVerifyLicenceKeyAction();
+        AsyncActionsCreator<AppState> VerifyLicenceKeyAction(string licencekey = null);
+        AsyncActionsCreator<AppState> RefreshTokenAction();
+        AsyncActionsCreator<AppState> LogoutAction();
+        AsyncActionsCreator<AppState> ResetLicenceKeyAction();
+
+        AsyncActionsCreator<AppState> FullUpdateAction();
+
+        AsyncActionsCreator<AppState> GetUpdatesAction();
+        AsyncActionsCreator<AppState> UploadAppLogAction();
+        AsyncActionsCreator<AppState> PostUpdatesAction();
+
+        AsyncActionsCreator<AppState> RefreshContentsAction();
     }
 }

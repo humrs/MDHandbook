@@ -19,7 +19,7 @@ namespace MDHandbookApp.Forms.Services
 {
     public static class Constants
     {
-        public const string TestMobileURL = "http://192.168.0.75:55506";
+        public const string TestMobileURL = "http://192.168.72.192:55506";
         public const string ProductionMobileURL = "https://handbookmobileappservice.azurewebsites.net/";
     }
 }

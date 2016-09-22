@@ -19,6 +19,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Logging;
 using Prism.Navigation;
@@ -60,10 +61,9 @@ namespace MDHandbookApp.Forms.ViewModels
         public OptionsPageViewModel(
             ILogService logService,
             INavigationService navigationService,
-            IReduxService reduxService) : base(logService, navigationService, reduxService)
+            IReduxService reduxService,
+            IServerActionCreators serverActionCreators) : base(logService, navigationService, reduxService, serverActionCreators)
         {
-            _reduxService = reduxService;
-
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
 
             Logout = DelegateCommand.FromAsyncHandler(logout);
@@ -73,22 +73,17 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task refreshContents()
         {
-            _logService.Debug("Refresh Contents");
-            await navigateToMainPage();
+            await _reduxService.Store.Dispatch(_serverActionCreators.RefreshContentsAction());
         }
 
         private async Task resetLicenceKey()
         {
-            _logService.Debug("Reset Licence Key");
-            _reduxService.Store.Dispatch(new ClearLicenceKeyAction());
-            await navigateToMainPage();
+            await _reduxService.Store.Dispatch(_serverActionCreators.ResetLicenceKeyAction());
         }
 
         private async Task logout()
         {
-            _reduxService.Store.Dispatch(new LogoutAction());
-            _logService.Debug("Logout");
-            await navigateToMainPage();            
+            await _reduxService.Store.Dispatch(_serverActionCreators.LogoutAction());
         }
 
         protected override void setupObservables()

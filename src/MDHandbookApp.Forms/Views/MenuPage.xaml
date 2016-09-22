@@ -11,13 +11,9 @@
         <Button Text="About"            Command="{Binding NavigateToAboutPage}" />
         <Button Text="Privacy"          Command="{Binding NavigateToPrivacyPage}" />
         <Button Text="Login"            Command="{Binding NavigateToLoginPage}" IsVisible="{Binding ShowLogin}"/>
-        <Button Text="MainPage"         Command="{Binding NavigateToMainPage}" />
+        <Button Text="Handbooks"         Command="{Binding NavigateToMainPage}" />
         <Button Text="Set Licence Key"  Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding ShowSetLicenceKey}"/>
         <Button Text="Options"          Command="{Binding NavigateToOptionsPage}" IsVisible="{Binding ShowOptions}"/>
-        
-        <Button Text="ToggleBusy"          Command="{Binding ToggleNetworkBusy}" />
-        <Button Text="DisplayLicenceError" Command="{Binding NavigateToLicenceErrorPage}" />
-        <Button Text="DisplayUnauthorized" Command="{Binding NavigateToUnauthorizedErrorPage}" />
       </StackLayout>
     </ContentPage>
   </MasterDetailPage.Master>

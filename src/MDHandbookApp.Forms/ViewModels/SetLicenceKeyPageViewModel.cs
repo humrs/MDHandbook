@@ -14,13 +14,16 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Logging;
 using Prism.Navigation;
-
+using ReactiveUI;
 
 namespace MDHandbookApp.Forms.ViewModels
 {
@@ -28,11 +31,43 @@ namespace MDHandbookApp.Forms.ViewModels
     {
         public DelegateCommand SetLicenceKey { get; set; }
         public DelegateCommand NavigateToMainPage { get; set; }
+
+        private IObservable<bool> islicenced;
+        private IObservable<bool> isunauthorized;
+
+        private bool _enableSetLicenceKeyButton;
+        public bool EnableSetLicenceKeyButton
+        {
+            get { return _enableSetLicenceKeyButton; }
+            set { SetProperty(ref _enableSetLicenceKeyButton, value); }
+        }
+
+        private bool _showLicencedMessage;
+        public bool ShowLicencedMessage
+        {
+            get { return _showLicencedMessage; }
+            set { SetProperty(ref _showLicencedMessage, value); }
+        }
+
+        private bool _showUnauthorizedMessage;
+        public bool ShowUnauthorizedMessage
+        {
+            get { return _showUnauthorizedMessage; }
+            set { SetProperty(ref _showUnauthorizedMessage, value); }
+        }
+
+        private string _licenceKeyString;
+        public string LicenceKeyString
+        {
+            get { return _licenceKeyString; }
+            set { SetProperty(ref _licenceKeyString, value); }
+        }
         
         public SetLicenceKeyPageViewModel(
             ILogService logService,
             INavigationService navigationService,
-            IReduxService reduxService) : base(logService, navigationService, reduxService)
+            IReduxService reduxService,
+            IServerActionCreators serverActionCreators) : base(logService, navigationService, reduxService, serverActionCreators)
         {
             SetLicenceKey = DelegateCommand.FromAsyncHandler(setLicenceKey);
             NavigateToMainPage = DelegateCommand.FromAsyncHandler(navigateToMainPage);
@@ -40,9 +75,46 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task setLicenceKey()
         {
-            _logService.Debug("Set Licence Key");
-            _reduxService.Store.Dispatch(new SetLicensedAction());
-            await navigateToMainPage();
+            await _reduxService.Store.Dispatch(_serverActionCreators.VerifyLicenceKeyAction(_licenceKeyString));
+        }
+
+        protected override void setupObservables()
+        {
+            islicenced = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
+                .Select(d => d.CurrentState.IsLicensed);
+
+            isunauthorized = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.HasUnauthorizedError })
+                .Select(d => d.CurrentState.HasUnauthorizedError);
+        }
+
+        protected override void setupSubscriptions()
+        {
+            islicenced
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x =>
+                {
+                    EnableSetLicenceKeyButton = !x;
+                    ShowLicencedMessage = x;
+                });
+
+            isunauthorized
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowUnauthorizedMessage = x;
+                });
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+
+            setupObservables();
+
+            setupSubscriptions();
         }
     }
 }

@@ -4,9 +4,9 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MDHandbookApp.Forms.Views.MainPage"
-             Title="Main Page">
+             Title="Handbooks">
   <StackLayout Margin="20" Spacing="10">
-    <Label Text="placeholder for updateTime" x:Name="updateTime" FontSize="Micro" TextColor="Blue" />
+    <Label Text="{Binding UpdateTime}" FontSize="Micro" TextColor="Blue" />
     <Label FontSize="Large" TextColor="Blue" HorizontalTextAlignment="Center">
       Handbooks
     </Label>
@@ -22,7 +22,7 @@
     </Label>
     <Button Text="Login" Command="{Binding NavigateToLoginPage}" IsVisible="{Binding ShowNotLoggedInMessage}"/>
     <Button Text="Set Licence Key" Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding ShowNotLicencedMessage}"/>
-    <ListView x:Name="bookList" SeparatorVisibility="None" IsVisible="{Binding ShowBookList}">
+    <ListView  ItemsSource="{Binding Handbooks}" SeparatorVisibility="None" IsVisible="{Binding ShowBookList}">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>

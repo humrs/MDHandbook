@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
 using Microsoft.WindowsAzure.MobileServices;
@@ -42,9 +43,11 @@ namespace MDHandbookApp.Forms
         public static MobileServiceClient ServerClient { get; private set; }
 
 
-        private AppBootstrapper _appBootstrapper = null;
+        private static AppBootstrapper _appBootstrapper = null;
 
-        public App(IPlatformInitializer initializer = null) : base(initializer) { }
+        public App(IPlatformInitializer initializer = null) : base(initializer)
+        {
+        }
 
         public override void Initialize()
         {
@@ -61,6 +64,10 @@ namespace MDHandbookApp.Forms
             base.Initialize();
 
             _appBootstrapper.InitializeMDHandbookServices(Container);
+
+            _appBootstrapper.SetupObservables(Container);
+
+            _appBootstrapper.SetupSubscriptions(Container);
         }
 
         protected override void OnInitialized()

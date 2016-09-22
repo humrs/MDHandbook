@@ -7,10 +7,13 @@
              Title="Login">
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text ="Login with one of the following providers." />
-    <Button Text="Google"    Command="{Binding LoginGoogle}" />
-    <Button Text="Facebook"  Command="{Binding LoginFacebook}"/>
-    <Button Text="Microsoft" Command="{Binding LoginMicrosoft}"/>
-    <Button Text="Twitter"   Command="{Binding LoginTwitter}" />
+    <Label Text="You are logged in." IsVisible="{Binding ShowLoggedInMessage}" />
+    <Label Text="You are not logged in." IsVisible="{Binding EnableLoginButton}" />
+    <Label Text="Unable to log in. Please try again" IsVisible="{Binding ShowUnauthorizedMessage}" />
+    <Button Text="Google"    Command="{Binding LoginGoogle}" IsEnabled="{Binding EnableLoginButton}"/>
+    <Button Text="Facebook"  Command="{Binding LoginFacebook}" IsEnabled="{Binding EnableLoginButton}"/>
+    <Button Text="Microsoft" Command="{Binding LoginMicrosoft}" IsEnabled="{Binding EnableLoginButton}"/>
+    <Button Text="Twitter"   Command="{Binding LoginTwitter}" IsEnabled="{Binding EnableLoginButton}"/>
     <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />
   </StackLayout>
 </ContentPage>

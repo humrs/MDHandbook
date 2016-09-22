@@ -19,6 +19,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Navigation;
 using ReactiveUI;
@@ -39,12 +40,6 @@ namespace MDHandbookApp.Forms.ViewModels
         private IObservable<bool> isloggedin;
         private IObservable<bool> islicenced;
 
-
-#if DEBUG
-        public DelegateCommand ToggleNetworkBusy { get; set; }
-        public DelegateCommand NavigateToLicenceErrorPage { get; set; }
-        public DelegateCommand NavigateToUnauthorizedErrorPage { get; set; }
-#endif
 
         private bool _showLogin = true;
         public bool ShowLogin
@@ -70,7 +65,8 @@ namespace MDHandbookApp.Forms.ViewModels
         public MenuPageViewModel(
             ILogService logService,
             INavigationService navigationService,
-            IReduxService reduxService) : base(logService, navigationService, reduxService)
+            IReduxService reduxService,
+            IServerActionCreators serverActionCreators) : base(logService, navigationService, reduxService, serverActionCreators)
         {
             NavigateToAboutPage = DelegateCommand.FromAsyncHandler(navigateToAboutPage);
             NavigateToLoginPage = DelegateCommand.FromAsyncHandler(navigateToLoginPage);
@@ -78,27 +74,8 @@ namespace MDHandbookApp.Forms.ViewModels
             NavigateToOptionsPage = DelegateCommand.FromAsyncHandler(navigateToOptionsPage);
             NavigateToPrivacyPage = DelegateCommand.FromAsyncHandler(navigateToPrivacyPage);
             NavigateToSetLicenceKeyPage = DelegateCommand.FromAsyncHandler(navigateToSetLicenceKeyPage);
-
-            _networkbusy = false;
-
-            NavigateToLicenceErrorPage = DelegateCommand.FromAsyncHandler(navigateToLicenceErrorPage);
-            NavigateToUnauthorizedErrorPage = DelegateCommand.FromAsyncHandler(navigateToUnauthorizedErrorPage);
-            ToggleNetworkBusy = new DelegateCommand(toggleNetworkBusy);
         }
 
-        private void toggleNetworkBusy()
-        {
-            if (!_networkbusy)
-                _reduxService.Store.Dispatch(new SetIsNetworkBusyAction());
-            else
-                _reduxService.Store.Dispatch(new ClearIsNetworkBusyAction());
-            _networkbusy = !_networkbusy;
-        }
-
-        private async Task navigateToUnauthorizedErrorPage()
-        {
-            await _navigationService.NavigateAsync(Constants.UnauthorizedErrorPageRelUrl);
-        }
 
         private async Task navigateToSetLicenceKeyPage()
         {
@@ -118,11 +95,6 @@ namespace MDHandbookApp.Forms.ViewModels
         private async Task navigateToLoginPage()
         {
             await _navigationService.NavigateAsync(Constants.LoginPageRelUrl);
-        }
-
-        private async Task navigateToLicenceErrorPage()
-        {
-            await _navigationService.NavigateAsync(Constants.LicenceErrorPageRelUrl);
         }
 
         private async Task navigateToAboutPage()

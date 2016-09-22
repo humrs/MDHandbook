@@ -4,6 +4,6 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MDHandbookApp.Forms.Views.BookpagePage"
-             Title="Bookpage Page">
-  <WebView Source="https://www.google.com" Navigating="webOnNavigating" Navigated="webOnEndNavigating" />
+             Title="{Binding Title}">
+  <WebView x:Name="bookpageWebView" Source="{Binding Source}" Navigating="webOnNavigating" Navigated="webOnEndNavigating" />
 </ContentPage>
