@@ -41,6 +41,10 @@ namespace MDHandbookApp.Forms.Services
             };
 
             _logStoreService.AddItem(item);
+
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{dt:o}:{category}:{priority}::  {message}");
+#endif
         }
     }
 }

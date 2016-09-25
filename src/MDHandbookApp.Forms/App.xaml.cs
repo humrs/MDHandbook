@@ -49,8 +49,8 @@ namespace MDHandbookApp.Forms
     public partial class App : PrismApplication
     {
 #if DEBUG
-        private static TimeSpan updateInterval = TimeSpan.FromSeconds(10);
-        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(60);
+        private static TimeSpan updateInterval = TimeSpan.FromSeconds(1);
+        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(6);
         private const int MinimumRefreshTokenPeriodInDays = 1;
 #else
         private static TimeSpan updateInterval = TimeSpan.FromHours(6);
@@ -139,7 +139,7 @@ namespace MDHandbookApp.Forms
                     });
 
             Observable
-                .Interval(TimeSpan.FromHours(1))
+                .Interval(TimeSpan.FromSeconds(20))
                 .Subscribe(
                     x => _reduxService.Store.Dispatch(new ClearIsNetworkDownAction()));
         }
@@ -204,6 +204,7 @@ namespace MDHandbookApp.Forms
             Container.RegisterType<ILogStoreService, LogStoreService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IMyLogger, FullLogger>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ILogService, FullDebugLogService>(new ContainerControlledLifetimeManager());
+
             Container.RegisterType<IBookReducers, BookReducers>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IFullpageReducers, FullpageReducers>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IHandbookStateReducers, HandbookStateReducers>(new ContainerControlledLifetimeManager());
@@ -232,7 +233,7 @@ namespace MDHandbookApp.Forms
             ServerClient = new MobileServiceClient(Constants.TestMobileURL);
             ServerClient.AlternateLoginHost = new Uri(Constants.ProductionMobileURL);
 #else
-            ServerClient = new MobileServiceCLient(Constants.ProductionMobileURL);
+            ServerClient = new MobileServiceClient(Constants.ProductionMobileURL);
 #endif
         }
 

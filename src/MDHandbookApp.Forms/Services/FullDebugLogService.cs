@@ -23,9 +23,9 @@ namespace MDHandbookApp.Forms.Services
 {
     public class FullDebugLogService : ILogService
     {
-        private ILoggerFacade _logger;
+        private IMyLogger _logger;
 
-        public FullDebugLogService(ILoggerFacade logger)
+        public FullDebugLogService(IMyLogger logger)
         {
             _logger = logger;
         }

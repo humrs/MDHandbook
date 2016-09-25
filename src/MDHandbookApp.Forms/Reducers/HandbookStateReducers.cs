@@ -87,7 +87,7 @@ namespace MDHandbookApp.Forms.Reducers
 
         private HandbookState clearIsNetworkBusyReducer(HandbookState previousState, ClearIsNetworkBusyAction action)
         {
-            _logService.Info("ClearIsNetworkBusReducer");
+            _logService.Info("ClearIsNetworkBusyReducer");
             HandbookState newState = previousState.Clone();
             newState.IsNetworkBusy = false;
             return newState;
@@ -95,7 +95,7 @@ namespace MDHandbookApp.Forms.Reducers
 
         private HandbookState setIsNetworkBusyReducer(HandbookState previousState, SetIsNetworkBusyAction action)
         {
-            _logService.Info("SetIsNetworkBusReducer");
+            _logService.Info("SetIsNetworkBusyReducer");
             HandbookState newState = previousState.Clone();
             newState.IsNetworkBusy = true;
             return newState;
