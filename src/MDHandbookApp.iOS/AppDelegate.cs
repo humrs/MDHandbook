@@ -15,9 +15,12 @@
 //
 
 
+using System;
+using System.Threading.Tasks;
 using Foundation;
 using MDHandbookApp.Forms;
 using Microsoft.Practices.Unity;
+using Microsoft.WindowsAzure.MobileServices;
 using Prism.Unity;
 using UIKit;
 
@@ -28,8 +31,23 @@ namespace MDHandbookApp.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IAuthenticate
     {
+        private MobileServiceUser user;
+
+        public async Task<bool> Authenticate(MobileServiceAuthenticationProvider provider)
+        {
+            var success = false;
+            try
+            {
+                user = await App.ServerClient.LoginAsync(UIApplication.SharedApplication.KeyWindow.RootViewController, provider);
+                success = true;
+            }
+            catch (Exception)
+            { }
+            return success;
+        }
+
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
         // method you should instantiate the window, load the UI into it and then make the window
@@ -40,6 +58,11 @@ namespace MDHandbookApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+
+            App.Init((IAuthenticate) this);
+
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);
