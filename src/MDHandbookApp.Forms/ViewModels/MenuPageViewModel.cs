@@ -19,6 +19,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Navigation;
 using ReactiveUI;
@@ -116,28 +117,28 @@ namespace MDHandbookApp.Forms.ViewModels
             isloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowLogin = !x;
-                    });
+                .Subscribe(x => {
+                    ShowLogin = !x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             isloggedin
                 .CombineLatest(islicenced, (x, y) => x || y)
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowOptions = x;
-                    });
+                .Subscribe(x => {
+                    ShowOptions = x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             isloggedin
                 .CombineLatest(islicenced, (x, y) => x && !y)
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowSetLicenceKey = x;
-                    });
+                .Subscribe(x => {
+                    ShowSetLicenceKey = x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
         }
 

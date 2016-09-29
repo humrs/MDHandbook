@@ -108,29 +108,29 @@ namespace MDHandbookApp.Forms.ViewModels
             isloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowLogout = x;
-                    });
+                .Subscribe(x => {
+                    ShowLogout = x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             islicencekeyset
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowResetLicenceKey = x;
-                    });
+                .Subscribe(x => {
+                    ShowResetLicenceKey = x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             islicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowRefreshContents = x;
-                    });
+                .Subscribe(x => {
+                    ShowRefreshContents = x;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
         }
-       
+
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);

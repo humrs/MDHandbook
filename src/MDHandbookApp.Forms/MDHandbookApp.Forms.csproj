@@ -80,6 +80,7 @@
     <Compile Include="States\Fullpage.cs" />
     <Compile Include="States\HandbookState.cs" />
     <Compile Include="States\PostUpdateState.cs" />
+    <Compile Include="Utilities\IObservableExtensions.cs" />
     <Compile Include="Utilities\StoreExtensions.cs" />
     <Compile Include="ViewModels\BookTileViewModel.cs" />
     <Compile Include="ViewModels\Constants.cs" />

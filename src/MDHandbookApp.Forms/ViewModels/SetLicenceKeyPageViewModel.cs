@@ -180,49 +180,63 @@ namespace MDHandbookApp.Forms.ViewModels
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowLicencedMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             shownotlicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowNotLicencedMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             showlicencekeysuccessful
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowLicenceKeySuccessfulMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             showlicencekeynotsuccessful
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowLicenceKeyNotSuccessfulMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             shownetworkdown
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowNetworkDownMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             enablesetlicencekeybutton
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     EnableSetLicenceKeyButton = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
 
             isnetworkbusy
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowActivityIndicator = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
+
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)

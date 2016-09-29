@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Actions;
 using MDHandbookApp.Forms.Services;
@@ -25,6 +26,8 @@ namespace MDHandbookApp.Forms.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigationAware
     {
+        protected readonly CompositeDisposable subscriptionDisposibles = new CompositeDisposable();
+
         protected ILogService _logService;
         protected INavigationService _navigationService;
         protected IReduxService _reduxService;
@@ -55,6 +58,7 @@ namespace MDHandbookApp.Forms.ViewModels
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
         {
+            subscriptionDisposibles.Clear();
         }
 
         public virtual void OnNavigatedTo(NavigationParameters parameters)

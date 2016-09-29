@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
 using Prism.Commands;
 using Prism.Navigation;
 using ReactiveUI;
@@ -180,34 +181,37 @@ namespace MDHandbookApp.Forms.ViewModels
                 .Subscribe(
                     x => {
                         UpdateTime = x;
-                    });
+                    })
+                .DisposeWith(subscriptionDisposibles);
 
             _reduxService.Store
                 .DistinctUntilChanged(state => new { state.Books })
                 .Select(d => d.Books.Values.OrderBy(y => y.OrderIndex).ToList())
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    xs => {
-                        var newlist = new List<BookTileViewModel>();
-                        newlist.AddRange(xs.Select(x => new BookTileViewModel(x, _logService, _navigationService)));
-                        Handbooks.Clear();
-                        Handbooks = newlist;
-                    });
+                .Subscribe(xs => {
+                    var newlist = new List<BookTileViewModel>();
+                    newlist.AddRange(xs.Select(x => new BookTileViewModel(x, _logService, _navigationService)));
+                    Handbooks.Clear();
+                    Handbooks = newlist;
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             shownotloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowNotLoggedInMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             shownotlicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowNotLicencedMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             showneedloginandlicence
                 .DistinctUntilChanged()
@@ -215,36 +219,41 @@ namespace MDHandbookApp.Forms.ViewModels
                 .Subscribe(x => {
                     ShowBookList = !x;
                     ShowNeedLoginAndLicencedMessage = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             enableloginbutton
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     EnableLoginButton = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             enablesetlicencekeybutton
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     EnableSetLicenceKeyButton = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             isnetworkbusy
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowActivityIndicator = x;
-                });
+                })
+                .DisposeWith(subscriptionDisposibles);
 
             showunauthorizederror
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
                     ShowUnauthorizedErrorMessage = x;
-                });
-           
+                })
+                .DisposeWith(subscriptionDisposibles);
+
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
