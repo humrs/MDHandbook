@@ -40,6 +40,7 @@ namespace MDHandbookApp.Forms.Services
         public async Task SaveLogStore(ImmutableList<AppLogItemMessage> logstores)
         {
             await BlobCache.UserAccount.InsertObject("logstore", logstores);
+            await BlobCache.UserAccount.Flush();
         }
 
         public AppState LoadOfflineAppState()

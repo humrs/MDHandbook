@@ -36,17 +36,20 @@ namespace MDHandbookApp.Forms.Actions
         private IMobileService _mobileService;
         private ILogService _logService;
         private ILogStoreService _logStoreService;
+        private IOfflineService _offlineService;
 
         public ServerActionCreators(
             ILogService logService,
             IReduxService reduxService,
             IMobileService mobileService,
-            ILogStoreService logStoreService)
+            ILogStoreService logStoreService,
+            IOfflineService offlineService)
         {
             _logService = logService;
             _reduxService = reduxService;
             _mobileService = mobileService;
             _logStoreService = logStoreService;
+            _offlineService = offlineService;
         }
 
         private bool httpClientAvailable = true;
@@ -121,7 +124,8 @@ namespace MDHandbookApp.Forms.Actions
                 if(!getState().CurrentEventsState.IsNetworkDown)
                     await doUploadAppLog(dispatch, getState);
 
-                //await _offlineService.SaveAppState(_reduxService.Store.GetState());
+                await _offlineService.SaveAppState(_reduxService.Store.GetState());
+                await _offlineService.SaveLogStore(_logStoreService.LogStore);
 
                 fullupdating = false;
                 dispatch(new ClearIsNetworkBusyAction());
@@ -228,9 +232,11 @@ namespace MDHandbookApp.Forms.Actions
                     dispatch(new SetLicenceKeySuccessfulAction());
                     dispatch(new SetLicenceKeyAction { LicenceKey = candidateLicenceKey });
                     dispatch(new SetLicensedAction());
+                    dispatch(new SetNeedsUpdateAction());
                 }
                 else
                 {
+                    dispatch(new ClearNeedsUpdateAction());
                     dispatch(new SetLicenceKeyNotSuccessfulAction());
                     dispatch(new ClearLicenceKeyAction());
                 }
@@ -248,7 +254,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -295,7 +301,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
 
             }
@@ -308,15 +314,15 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                     if (ex.InnerException != null)
                     {
                         //Log inner Exception
@@ -324,7 +330,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                     //Log Unknown Exception
                 }
             }
@@ -362,7 +368,8 @@ namespace MDHandbookApp.Forms.Actions
             List<ServerUpdateMessage> messages = null;
             try
             {
-                messages = await _mobileService.GetUpdates();
+                var getUpdatesMessage = createGetUpdatesMessage();
+                messages = await _mobileService.GetUpdates(getUpdatesMessage);
                 processServerUpdateMessages(messages);
                 dispatch(new SetLastUpdateTimeAction { UpdateTime = DateTimeOffset.UtcNow });
             }
@@ -378,7 +385,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -417,10 +424,12 @@ namespace MDHandbookApp.Forms.Actions
             bool success = false;
 
             List<AppLogItemMessage> items = _logStoreService.LogStore.ToList();
+            _logService.Info($"{items.Count}");
 
             try
             {
                 success = await _mobileService.LoadAppLog(items);
+                _logService.Info($"{success}");
 
                 if (success)
                 {
@@ -439,7 +448,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -496,7 +505,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -549,7 +558,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetUnauthorizedErrorAction());
+                    dispatch(new IncrementUnauthorizedCountAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -619,6 +628,14 @@ namespace MDHandbookApp.Forms.Actions
                 DeleteBookItemIds = _reduxService.Store.GetState().CurrentPostUpdateState.DeletedBooksIds.ToList(),
                 AddFullpageItemIds = _reduxService.Store.GetState().CurrentPostUpdateState.AddedFullpagesIds.ToList(),
                 DeleteFullpageItemIds = _reduxService.Store.GetState().CurrentPostUpdateState.DeletedFullpagesIds.ToList()
+            };
+        }
+
+        private GetUpdatesMessage createGetUpdatesMessage()
+        {
+            return new GetUpdatesMessage {
+                BookItemIds = _reduxService.Store.GetState().Books.Select(x => x.Key).ToList(),
+                FullpageItemIds = _reduxService.Store.GetState().Fullpages.Select(x => x.Key).ToList()
             };
         }
     }

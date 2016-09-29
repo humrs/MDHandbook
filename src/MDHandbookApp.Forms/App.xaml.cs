@@ -39,9 +39,9 @@ namespace MDHandbookApp.Forms
     public partial class App : PrismApplication
     {
 #if DEBUG
-        private static TimeSpan updateInterval = TimeSpan.FromSeconds(60);
-        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(120);
-        private static TimeSpan clearNetworkInterval = TimeSpan.FromSeconds(15);
+        private static TimeSpan updateInterval = TimeSpan.FromSeconds(600);
+        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(1200);
+        private static TimeSpan clearNetworkInterval = TimeSpan.FromSeconds(150);
         private const int MinimumRefreshTokenPeriodInDays = 1;
 #else
         private static TimeSpan updateInterval = TimeSpan.FromHours(6);
@@ -50,6 +50,7 @@ namespace MDHandbookApp.Forms
         private const int MinimumRefreshTokenPeriodInDays = 15;
 #endif
 
+        private const int maxUnauthorizedRetries = 6;
         private static TimeSpan throttleTime = TimeSpan.FromMilliseconds(100);
 
         private const string JWTExpiryTimeKey = "exp";
@@ -59,6 +60,8 @@ namespace MDHandbookApp.Forms
         private IObservable<bool> islicencekeyset;
         private IObservable<bool> canchecklicencekey;
         private IObservable<bool> isnetworkdown;
+        private IObservable<int>  unauthorizedcount;
+        private IObservable<bool> needsupdate;
 
 
         public static IAuthenticate Authenticator { get; private set; }
@@ -116,11 +119,23 @@ namespace MDHandbookApp.Forms
                             _reduxService.Store.Dispatch(_serverActionCreators.VerifyLicenceKeyAction());
                     });
 
+            unauthorizedcount
+                .Throttle(throttleTime)
+                .DistinctUntilChanged()
+                .Subscribe(x => {
+                    if (x > maxUnauthorizedRetries)
+                    {
+                        _reduxService.Store.Dispatch(new LogoutAction());
+                        _reduxService.Store.Dispatch(new SetReturnToMainPageAction());
+                        _reduxService.Store.Dispatch(new SetUnauthorizedErrorAction());
+                    }
+                });
+
             Observable
                 .Interval(updateInterval)
                 .Subscribe(
                     x => {
-                        checkUpdates();
+                        _reduxService.Store.Dispatch(new SetNeedsUpdateAction());
                     });
 
             Observable
@@ -138,6 +153,16 @@ namespace MDHandbookApp.Forms
                             _reduxService.Store.Dispatch(new ClearIsNetworkDownAction());
 
                     });
+
+            needsupdate
+                .Throttle(throttleTime)
+                .DistinctUntilChanged()
+                .Subscribe(x => {
+                    if(x)
+                    {
+                        checkUpdates();
+                    }
+                });
         }
 
         private void setupObservables()
@@ -160,10 +185,18 @@ namespace MDHandbookApp.Forms
                 .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkDown })
                 .Select(d => d.CurrentEventsState.IsNetworkDown);
 
+            needsupdate = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.NeedsUpdate })
+                .Select(d => d.CurrentEventsState.NeedsUpdate);
+
             canchecklicencekey = isnetworkdown
                 .CombineLatest(isloggedin, (x, y) => !x && y)
                 .CombineLatest(islicencekeyset, (x, y) => x && y)
                 .CombineLatest(islicenced, (x, y) => x && !y);
+
+            unauthorizedcount = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.UnauthorizedCount })
+                .Select(d => d.CurrentEventsState.UnauthorizedCount);
         }
 
         private void setupMobileUser()
@@ -182,7 +215,6 @@ namespace MDHandbookApp.Forms
         {
             Container.RegisterTypeForNavigation<AboutPage>();
             Container.RegisterTypeForNavigation<BookpagePage>();
-            Container.RegisterTypeForNavigation<LicenceErrorPage>();
             Container.RegisterTypeForNavigation<LoginPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<MenuPage>();
@@ -190,7 +222,6 @@ namespace MDHandbookApp.Forms
             Container.RegisterTypeForNavigation<OptionsPage>();
             Container.RegisterTypeForNavigation<PrivacyPage>();
             Container.RegisterTypeForNavigation<SetLicenceKeyPage>();
-            Container.RegisterTypeForNavigation<UnauthorizedErrorPage>();
         }
 
         private void initializeServices()
@@ -216,11 +247,20 @@ namespace MDHandbookApp.Forms
             Container.RegisterType<IServerActionCreators, ServerActionCreators>(new ContainerControlledLifetimeManager());
         }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+            var _reduxService = Container.Resolve<IReduxService>();
+            _reduxService.Store.Dispatch(new SetNeedsUpdateAction());
+        }
+
         protected async override void OnSleep()
         {
             var _offlineService = Container.Resolve<IOfflineService>();
             var _reduxService = Container.Resolve<IReduxService>();
+            var _logStoreService = Container.Resolve<ILogStoreService>();
             await _offlineService.SaveAppState(_reduxService.Store.GetState());
+            await _offlineService.SaveLogStore(_logStoreService.LogStore);
         }
 
         private void setupMobileClient()
@@ -242,6 +282,7 @@ namespace MDHandbookApp.Forms
             {
                 _reduxService.Store.Dispatch(_serverActionCreators.FullUpdateAction());
             }
+            _reduxService.Store.Dispatch(new ClearNeedsUpdateAction());
         }
 
         private async Task refreshToken()

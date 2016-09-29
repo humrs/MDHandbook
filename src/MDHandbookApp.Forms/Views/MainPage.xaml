@@ -20,6 +20,9 @@
     <Label FontSize="Medium" IsVisible="{Binding ShowNotLicencedMessage}">
       You are logged in but you need to enter a valid Licence Key.
     </Label>
+    <Label FontSize="Medium" IsVisible="{Binding ShowUnauthorizedErrorMessage}">
+      Unfortunately, your login credentials are not working and you have been logged out. Normally, this should not happen. Please login again and if this continues, contact the app developer.
+    </Label>
     <Button Text="Login" Command="{Binding NavigateToLoginPage}" IsVisible="{Binding EnableLoginButton}"/>
     <Button Text="Set Licence Key" Command="{Binding NavigateToSetLicenceKeyPage}" IsVisible="{Binding EnableSetLicenceKeyButton}"/>
     <ListView  ItemsSource="{Binding Handbooks}" SeparatorVisibility="None" IsVisible="{Binding ShowBookList}">

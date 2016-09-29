@@ -34,6 +34,12 @@ namespace MDHandbookApp.Forms.Reducers
 
         public EventsState EventsStateReducer(EventsState previousState, IAction action)
         {
+            if (action is ClearUnauthorizedCountAction)
+                return clearUnauthorizedCountReducer(previousState, (ClearUnauthorizedCountAction) action);
+
+            if (action is IncrementUnauthorizedCountAction)
+                return incrementUnauthorizedCountReducer(previousState, (IncrementUnauthorizedCountAction) action);
+
             if (action is SetIsNetworkDownAction)
                 return setIsNetworkDownReducer(previousState, (SetIsNetworkDownAction)action);
 
@@ -70,7 +76,67 @@ namespace MDHandbookApp.Forms.Reducers
             if (action is ClearUnauthorizedErrorAction)
                 return clearUnauthorizedErrorReducer(previousState, (ClearUnauthorizedErrorAction) action);
 
+            if (action is SetReturnToMainPageAction)
+                return setReturnToMainPageReducer(previousState, (SetReturnToMainPageAction) action);
+
+            if (action is ClearReturnToMainPageAction)
+                return clearReturnToMainPageReducer(previousState, (ClearReturnToMainPageAction) action);
+
+            if (action is SetNeedsUpdateAction)
+                return setNeedsUpdateReducer(previousState, (SetNeedsUpdateAction) action);
+
+            if (action is ClearNeedsUpdateAction)
+                return clearNeedsUpdateReducer(previousState, (ClearNeedsUpdateAction) action);
+
             return previousState;
+        }
+
+        private EventsState clearNeedsUpdateReducer(EventsState previousState, ClearNeedsUpdateAction action)
+        {
+            _logService.Info("ClearNeedsUpdateReducer");
+            EventsState newState = previousState.Clone();
+            newState.NeedsUpdate = false;
+            return newState;
+        }
+
+        private EventsState setNeedsUpdateReducer(EventsState previousState, SetNeedsUpdateAction action)
+        {
+            _logService.Info("SetNeedsUpdateReducer");
+            EventsState newState = previousState.Clone();
+            newState.NeedsUpdate = true;
+            return newState;
+        }
+
+        private EventsState clearReturnToMainPageReducer(EventsState previousState, ClearReturnToMainPageAction action)
+        {
+            _logService.Info("ClearReturnToMainPageReducer");
+            EventsState newState = previousState.Clone();
+            newState.ReturnToMainPage = false;
+            return newState;
+        }
+
+        private EventsState setReturnToMainPageReducer(EventsState previousState, SetReturnToMainPageAction action)
+        {
+            _logService.Info("SetReturnToMainPageReducer");
+            EventsState newState = previousState.Clone();
+            newState.ReturnToMainPage = true;
+            return newState;
+        }
+
+        private EventsState incrementUnauthorizedCountReducer(EventsState previousState, IncrementUnauthorizedCountAction action)
+        {
+            _logService.Info("IncrementUnauthorizedCountReducer");
+            EventsState newState = previousState.Clone();
+            newState.UnauthorizedCount = newState.UnauthorizedCount + 1;
+            return newState;
+        }
+
+        private EventsState clearUnauthorizedCountReducer(EventsState previousState, ClearUnauthorizedCountAction action)
+        {
+            _logService.Info("ClearUnauthorizedCountReducer");
+            EventsState newState = previousState.Clone();
+            newState.UnauthorizedCount = 0;
+            return newState;
         }
 
         private EventsState clearUnauthorizedErrorReducer(EventsState previousState, ClearUnauthorizedErrorAction action)

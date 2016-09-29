@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Models\RequestMessages\AppLogItemMessage.cs" />
+    <Compile Include="Models\RequestMessages\GetUpdatesMessage.cs" />
     <Compile Include="Models\RequestMessages\VerifyLicenceKeyMessage.cs" />
     <Compile Include="Models\ResponseMessages\AppLogBulkResponseMessage.cs" />
     <Compile Include="Models\ResponseMessages\LicenceKeyResponseMessage.cs" />

@@ -176,7 +176,7 @@ namespace MDHandbookApp.Forms.Services
             return result;
         }
 
-        public async Task<List<ServerUpdateMessage>> GetUpdates()
+        public async Task<List<ServerUpdateMessage>> GetUpdates(GetUpdatesMessage gum)
         {
             List<ServerUpdateMessage> results = null;
 
@@ -185,7 +185,7 @@ namespace MDHandbookApp.Forms.Services
 
             try
             {
-                req = setupJSONRequest(GetUpdatesAPI, "");
+                req = setupJSONRequest(GetUpdatesAPI, JsonConvert.SerializeObject(gum));
                 response = await _httpClient.SendAsync(req);
                 response.EnsureSuccessStatusCode();
 

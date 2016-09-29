@@ -20,6 +20,10 @@ using Redux;
 
 namespace MDHandbookApp.Forms.Actions
 {
+    public class ClearUnauthorizedCountAction : IAction { }
+
+    public class IncrementUnauthorizedCountAction : IAction { }
+
     public class SetIsNetworkDownAction : IAction
     {
         public DateTimeOffset NetworkDownLastAttemptDateTime { get; set; }
@@ -47,4 +51,11 @@ namespace MDHandbookApp.Forms.Actions
 
     public class ClearUnauthorizedErrorAction : IAction { }
 
+    public class SetReturnToMainPageAction : IAction { }
+
+    public class ClearReturnToMainPageAction : IAction { }
+
+    public class SetNeedsUpdateAction : IAction { }
+
+    public class ClearNeedsUpdateAction : IAction { }
 }

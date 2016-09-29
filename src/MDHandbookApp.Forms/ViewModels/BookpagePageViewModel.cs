@@ -57,6 +57,8 @@ namespace MDHandbookApp.Forms.ViewModels
             string fullpageUrl = e.Url.ToString();
             string fullpageId = "";
 
+            _logService.Info($"BookpageNavigateTo:{fullpageUrl}");
+
             if (fullpageUrl.StartsWith(Constants.WebpageUrlWebStartId))
             {
                 Source = new UrlWebViewSource { Url = fullpageUrl };
@@ -84,6 +86,7 @@ namespace MDHandbookApp.Forms.ViewModels
             try
             {
                 fullpageUrl = (string)parameters[Constants.BookpagePageUrlParamId];
+                _logService.Info($"{fullpageUrl}");
                 fullpage = _reduxService.Store.GetState().Fullpages[fullpageUrl];
                 Source = fullpage.Content;
                 Title = fullpage.Title;
@@ -91,7 +94,9 @@ namespace MDHandbookApp.Forms.ViewModels
             }
             catch(Exception)
             {
-                Source = new UrlWebViewSource { Url = "https://handbookappweb.azurewebsites.net" };
+                Source = "";
+                Title = "No Page";
+                _logService.Debug("NoPage");
                 return;
             }
 

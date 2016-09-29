@@ -32,7 +32,7 @@ namespace MDHandbookApp.Forms.Services
         string GetUserId();
         string GetToken();
 
-        Task<List<ServerUpdateMessage>> GetUpdates();
+        Task<List<ServerUpdateMessage>> GetUpdates(GetUpdatesMessage gum);
 
         Task<bool> LoadAppLog(List<AppLogItemMessage> items);
         Task<bool> PostUpdates(UpdateJsonMessage ujm);

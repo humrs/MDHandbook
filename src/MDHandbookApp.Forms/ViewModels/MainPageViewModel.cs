@@ -35,10 +35,12 @@ namespace MDHandbookApp.Forms.ViewModels
         private IObservable<bool> isloggedin;
         private IObservable<bool> islicenced;
         private IObservable<bool> isnetworkbusy;
+        private IObservable<bool> unauthorizederror;
 
         private IObservable<bool> showneedloginandlicence;
         private IObservable<bool> shownotloggedin;
         private IObservable<bool> shownotlicenced;
+        private IObservable<bool> showunauthorizederror;
         private IObservable<bool> enableloginbutton;
         private IObservable<bool> enablesetlicencekeybutton;
 
@@ -85,6 +87,12 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showNeedLoginAndLicencedMessage, value); }
         }
 
+        private bool _showUnauthorizedErrorMessage = false;
+        public bool ShowUnauthorizedErrorMessage
+        {
+            get { return _showUnauthorizedErrorMessage; }
+            set { SetProperty(ref _showUnauthorizedErrorMessage, value); }
+        }
 
         private bool _showBookList = false;
         public bool ShowBookList
@@ -142,6 +150,10 @@ namespace MDHandbookApp.Forms.ViewModels
                 .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkBusy })
                 .Select(d => d.CurrentEventsState.IsNetworkBusy);
 
+            unauthorizederror = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.UnauthorizedError })
+                .Select(d => d.CurrentEventsState.UnauthorizedError);
+
             showneedloginandlicence = islicenced
                 .Select(x => !x);
             
@@ -150,6 +162,8 @@ namespace MDHandbookApp.Forms.ViewModels
 
             shownotlicenced = isloggedin
                 .CombineLatest(islicenced, (x, y) => x && !y);
+
+            showunauthorizederror = unauthorizederror;
 
             enableloginbutton = shownotloggedin;
 
@@ -220,10 +234,16 @@ namespace MDHandbookApp.Forms.ViewModels
             isnetworkbusy
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowActivityIndicator = x;
-                    });
+                .Subscribe(x => {
+                    ShowActivityIndicator = x;
+                });
+
+            showunauthorizederror
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowUnauthorizedErrorMessage = x;
+                });
            
         }
 

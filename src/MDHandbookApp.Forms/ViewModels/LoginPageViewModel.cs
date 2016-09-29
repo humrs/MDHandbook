@@ -47,7 +47,6 @@ namespace MDHandbookApp.Forms.ViewModels
         private IObservable<bool> shownetworkdown;
         private IObservable<bool> enableloginbutton;
 
-
         private bool _showActivityIndicator = false;
         public bool ShowActivityIndicator
         {
@@ -160,7 +159,7 @@ namespace MDHandbookApp.Forms.ViewModels
                 .CombineLatest(isnetworkdown, (x, y) => x && !y);
             
             showloginsuccessful = isloggedin
-                .CombineLatest(loginsuccessful, (x, y) => x && y != null && (bool)y)
+                .CombineLatest(loginsuccessful, (x, y) => x && (y != null) && (bool) y)
                 .CombineLatest(isnetworkdown, (x, y) => x && !y);
 
             showloginnotsuccessful = isloggedin
@@ -196,7 +195,7 @@ namespace MDHandbookApp.Forms.ViewModels
                 .Subscribe(x => {
                     ShowLoginSuccessfulMessage = x;
                 });
-
+            
             showloginnotsuccessful
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
