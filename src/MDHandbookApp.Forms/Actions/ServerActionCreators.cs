@@ -610,11 +610,6 @@ namespace MDHandbookApp.Forms.Actions
 
             var deletePostBookAction = new AddPostUpdateDeleteBookIdsRangeAction { BookIds = deleteBooks.ToList() };
             _reduxService.Store.Dispatch(deletePostBookAction);
-
-            if (messages.Count != 0)
-            {
-                _reduxService.Store.Dispatch(new SetIsDataUpdatedAction());
-            }
         }
 
         private UpdateJsonMessage createPostUpdateJsonMessage()

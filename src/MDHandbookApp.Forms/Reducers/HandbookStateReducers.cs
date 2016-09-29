@@ -52,12 +52,6 @@ namespace MDHandbookApp.Forms.Reducers
             if (action is ClearLicensedAction)
                 return clearLicensedReducer(previousState, (ClearLicensedAction) action);
             
-            if (action is SetIsDataUpdatedAction)
-                return setIsDataUpdatedReducer(previousState, (SetIsDataUpdatedAction) action);
-
-            if (action is ClearIsDataUpdatedAction)
-                return clearIsDataUpdatedReducer(previousState, (ClearIsDataUpdatedAction) action);
-
             if (action is SetLastUpdateTimeAction)
                 return setLastUpdateTimeReducer(previousState, (SetLastUpdateTimeAction) action);
             
@@ -65,22 +59,6 @@ namespace MDHandbookApp.Forms.Reducers
                 return setRefreshTokenReducer(previousState, (SetRefreshTokenAction) action);
 
             return previousState;
-        }
-
-        private HandbookState clearIsDataUpdatedReducer(HandbookState previousState, ClearIsDataUpdatedAction action)
-        {
-            _logService.Info("ClearIsDataUpdatedReducer");
-            HandbookState newState = previousState.Clone();
-            newState.IsDataUpdated = false;
-            return newState;
-        }
-
-        private HandbookState setIsDataUpdatedReducer(HandbookState previousState, SetIsDataUpdatedAction action)
-        {
-            _logService.Info("SetIsDataUpdatedReducer");
-            HandbookState newState = previousState.Clone();
-            newState.IsDataUpdated = true;
-            return newState;
         }
 
 
@@ -100,7 +78,6 @@ namespace MDHandbookApp.Forms.Reducers
         {
             _logService.Info(string.Format("SetLastUpdateTimeReducer: {0}", action.UpdateTime.ToString("O")));
             HandbookState newState = previousState.Clone();
-            newState.IsDataUpdated = true;
             newState.LastUpdateTime = action.UpdateTime;
             return newState;
         }
@@ -162,8 +139,6 @@ namespace MDHandbookApp.Forms.Reducers
             newState.IsUserSet = false;
             newState.IsLoggedIn = false;
          
-            newState.IsDataUpdated = false;
-         
             newState.IsLicensed = false;
             return newState;
         }
@@ -190,8 +165,6 @@ namespace MDHandbookApp.Forms.Reducers
             newState.IsUserSet = true;
             newState.IsLoggedIn = true;
 
-            newState.IsDataUpdated = false;
-        
             newState.IsLicensed = false;
             return newState;
         }

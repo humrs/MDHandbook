@@ -36,10 +36,6 @@ namespace MDHandbookApp.Forms.Actions
     public class SetLicensedAction : IAction { }
     public class ClearLicensedAction : IAction { }
 
-
-    public class SetIsDataUpdatedAction : IAction { }
-    public class ClearIsDataUpdatedAction : IAction { }
-
     public class SetLastUpdateTimeAction : IAction
     {
         public DateTimeOffset UpdateTime { get; set; }

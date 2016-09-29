@@ -21,7 +21,6 @@ namespace MDHandbookApp.Forms.States
 {
     public class HandbookState
     {
-        public bool IsDataUpdated { get; set; }
         public DateTimeOffset LastUpdateTime { get; set; }
 
         public bool IsLicensed { get; set; }
@@ -42,7 +41,6 @@ namespace MDHandbookApp.Forms.States
 
         protected HandbookState(HandbookState old)
         {
-            this.IsDataUpdated = old.IsDataUpdated;
             this.LastUpdateTime = old.LastUpdateTime;
 
             this.IsLicensed = old.IsLicensed;
@@ -86,7 +84,6 @@ namespace MDHandbookApp.Forms.States
         public static HandbookState CreateEmpty()
         {
             return new HandbookState {
-                IsDataUpdated = false,
                 LastUpdateTime = new System.DateTimeOffset(1970, 1, 1, 0, 0, 0, new System.TimeSpan(-5, 0, 0)),
 
                 IsLicensed = false,
