@@ -7,9 +7,12 @@
              Title="Login">
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text ="Login with one of the following providers." />
-    <Label Text="You are logged in." IsVisible="{Binding ShowLoggedInMessage}" />
-    <Label Text="You are not logged in." IsVisible="{Binding EnableLoginButton}" />
-    <Label Text="Unable to log in. Please try again" IsVisible="{Binding ShowUnauthorizedMessage}" />
+    <Label Text="You are logged in. Please return to Main Page." IsVisible="{Binding ShowLoggedInMessage}" />
+    <Label Text="You are not logged in. Please login." IsVisible="{Binding ShowNotLoggedInMessage}" />
+    <Label Text="Login Successful. Please return to Main Page." IsVisible="{Binding ShowLoginSuccessfulMessage}" />
+    <Label Text="Login Unsuccessful. Please check network connection and try again." IsVisible="{Binding ShowLoginNotSuccessfulMessage}" />
+    <Label Text="Unable to log in. Please check network connection and try again." IsVisible="{Binding ShowNetworkDownMessage}" />
+    <ActivityIndicator IsRunning="{Binding ShowActivityIndicator}" IsVisible="True" />
     <Button Text="Google"    Command="{Binding LoginGoogle}" IsEnabled="{Binding EnableLoginButton}"/>
     <Button Text="Facebook"  Command="{Binding LoginFacebook}" IsEnabled="{Binding EnableLoginButton}"/>
     <Button Text="Microsoft" Command="{Binding LoginMicrosoft}" IsEnabled="{Binding EnableLoginButton}"/>

@@ -34,9 +34,26 @@ namespace MDHandbookApp.Forms.ViewModels
         public DelegateCommand LoginMicrosoft { get; set; }
         public DelegateCommand LoginTwitter { get; set; }
         public DelegateCommand NavigateToMainPage { get; set; }
-        
-        private IObservable<bool> isloggedin;
-        private IObservable<bool> isunauthorized;
+
+        private IObservable<bool>  isloggedin;
+        private IObservable<bool>  isnetworkdown;
+        private IObservable<bool?> loginsuccessful;
+        private IObservable<bool>  isnetworkbusy;
+
+        private IObservable<bool> showloggedin;
+        private IObservable<bool> shownotloggedin;
+        private IObservable<bool> showloginsuccessful;
+        private IObservable<bool> showloginnotsuccessful;
+        private IObservable<bool> shownetworkdown;
+        private IObservable<bool> enableloginbutton;
+
+
+        private bool _showActivityIndicator = false;
+        public bool ShowActivityIndicator
+        {
+            get { return _showActivityIndicator; }
+            set { SetProperty(ref _showActivityIndicator, value); }
+        }
 
         private bool _enableLoginButton;
         public bool EnableLoginButton
@@ -52,12 +69,35 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showLoggedInMessage, value); }
         }
 
-        private bool _showUnauthorizedMessage;
-        public bool ShowUnauthorizedMessage
+        private bool _showNotLoggedInMessage;
+        public bool ShowNotLoggedInMessage
         {
-            get { return _showUnauthorizedMessage; }
-            set { SetProperty(ref _showUnauthorizedMessage, value); }
+            get { return _showNotLoggedInMessage; }
+            set { SetProperty(ref _showNotLoggedInMessage, value); }
         }
+
+
+        private bool _showLoginSuccessfulMessage;
+        public bool ShowLoginSuccessfulMessage
+        {
+            get { return _showLoginSuccessfulMessage; }
+            set { SetProperty(ref _showLoginSuccessfulMessage, value); }
+        }
+
+        private bool _showLoginNotSuccessfulMessage;
+        public bool ShowLoginNotSuccessfulMessage
+        {
+            get { return _showLoginNotSuccessfulMessage; }
+            set { SetProperty(ref _showLoginNotSuccessfulMessage, value); }
+        }
+
+        private bool _showNetworkDownMessage;
+        public bool ShowNetworkDownMessage
+        {
+            get { return _showNetworkDownMessage; }
+            set { SetProperty(ref _showNetworkDownMessage, value); }
+        }
+
 
         public LoginPageViewModel(
             ILogService logService,
@@ -93,40 +133,104 @@ namespace MDHandbookApp.Forms.ViewModels
             await _reduxService.Store.Dispatch(_serverActionCreators.LoginAction(LoginProviders.Google));
         }
 
-
         protected override void setupObservables()
         {
             isloggedin = _reduxService.Store
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
                 .Select(d => d.CurrentState.IsLoggedIn);
 
-            isunauthorized = _reduxService.Store
-                .DistinctUntilChanged(state => new { state.CurrentState.HasUnauthorizedError })
-                .Select(d => d.CurrentState.HasUnauthorizedError);
+            isnetworkdown = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkDown })
+                .Select(d => d.CurrentEventsState.IsNetworkDown);
+
+            loginsuccessful = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.LoginSuccessful })
+                .Select(d => d.CurrentEventsState.LoginSuccessful);
+
+            isnetworkbusy = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkBusy })
+                .Select(d => d.CurrentEventsState.IsNetworkBusy);
+
+            showloggedin = isloggedin
+                .CombineLatest(loginsuccessful, (x, y) => x && y == null)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            shownotloggedin = isloggedin
+                .CombineLatest(loginsuccessful, (x, y) => !x && y == null)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+            
+            showloginsuccessful = isloggedin
+                .CombineLatest(loginsuccessful, (x, y) => x && y != null && (bool)y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            showloginnotsuccessful = isloggedin
+                .CombineLatest(loginsuccessful, (x, y) => !x && y != null && (bool)!y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            shownetworkdown = isnetworkdown;
+
+            enableloginbutton = isloggedin
+                .CombineLatest(isnetworkbusy, (x, y) => !x && !y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
         }
 
         protected override void setupSubscriptions()
         {
-            isloggedin
-                .DistinctUntilChanged()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x =>
-                    {
-                        EnableLoginButton = !x;
-                        ShowLoggedInMessage = x;
-                    });
-
-            isunauthorized
+            showloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
-                        ShowUnauthorizedMessage = x;
-                    });
+                    ShowLoggedInMessage = x;
+                });
+
+            shownotloggedin
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowNotLoggedInMessage = x;
+                });
+
+            showloginsuccessful
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowLoginSuccessfulMessage = x;
+                });
+
+            showloginnotsuccessful
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowLoginNotSuccessfulMessage = x;
+                });
+
+            shownetworkdown
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowNetworkDownMessage = x;
+                });
+
+            enableloginbutton
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    EnableLoginButton = x;
+                });
+
+            isnetworkbusy
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowActivityIndicator = x;
+                });
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
+
+            _reduxService.Store.Dispatch(new ClearLoginSuccessfullAction());
 
             setupObservables();
 

@@ -64,41 +64,7 @@ namespace MDHandbookApp.Forms.Reducers
             if (action is SetRefreshTokenAction)
                 return setRefreshTokenReducer(previousState, (SetRefreshTokenAction) action);
 
-            if (action is SetHasLicensedErrorAction)
-                return setHasLicensedErrorReducer(previousState, (SetHasLicensedErrorAction) action);
-
-            if (action is ClearHasLicensedErrorAction)
-                return clearHasLicensedErrorReducer(previousState, (ClearHasLicensedErrorAction) action);
-
-            if (action is SetHasUnauthorizedErrorAction)
-                return setHasUnauthorizedErrorReducer(previousState, (SetHasUnauthorizedErrorAction) action);
-
-            if (action is ClearHasUnauthorizedErrorAction)
-                return clearHasUnauthorizedErrorReducer(previousState, (ClearHasUnauthorizedErrorAction) action);
-
-            if (action is SetIsNetworkBusyAction)
-                return setIsNetworkBusyReducer(previousState, (SetIsNetworkBusyAction) action);
-
-            if (action is ClearIsNetworkBusyAction)
-                return clearIsNetworkBusyReducer(previousState, (ClearIsNetworkBusyAction) action);
-
             return previousState;
-        }
-
-        private HandbookState clearIsNetworkBusyReducer(HandbookState previousState, ClearIsNetworkBusyAction action)
-        {
-            _logService.Info("ClearIsNetworkBusyReducer");
-            HandbookState newState = previousState.Clone();
-            newState.IsNetworkBusy = false;
-            return newState;
-        }
-
-        private HandbookState setIsNetworkBusyReducer(HandbookState previousState, SetIsNetworkBusyAction action)
-        {
-            _logService.Info("SetIsNetworkBusyReducer");
-            HandbookState newState = previousState.Clone();
-            newState.IsNetworkBusy = true;
-            return newState;
         }
 
         private HandbookState clearIsDataUpdatedReducer(HandbookState previousState, ClearIsDataUpdatedAction action)
@@ -117,41 +83,8 @@ namespace MDHandbookApp.Forms.Reducers
             return newState;
         }
 
-        private HandbookState clearHasUnauthorizedErrorReducer(HandbookState previousState, ClearHasUnauthorizedErrorAction action)
-        {
-            _logService.Info("ClearHasUnauthorizedErrorReducer");
-            HandbookState newState = previousState.Clone();
-            newState.HasUnauthorizedError = false;
-            return newState;
-        }
-
-        private HandbookState setHasUnauthorizedErrorReducer(HandbookState previousState, SetHasUnauthorizedErrorAction action)
-        {
-            _logService.Info("SetHasUnauthorizedErrorReducer");
-            HandbookState newState = previousState.Clone();
-            newState.HasUnauthorizedError = true;
-            return newState;
-        }
-
-        private HandbookState clearHasLicensedErrorReducer(HandbookState previousState, ClearHasLicensedErrorAction action)
-        {
-            _logService.Info("ClearHasLicensedErrorReducer");
-            HandbookState newState = previousState.Clone();
-            newState.HasLicensedError = false;
-            return newState;
-        }
-
-        private HandbookState setHasLicensedErrorReducer(HandbookState previousState, SetHasLicensedErrorAction action)
-        {
-            _logService.Info("SetHasLicensedErrorReducer");
-            HandbookState newState = previousState.Clone();
-            newState.HasLicensedError = true;
-            return newState;
-        }
-
 
         
-
         private HandbookState setRefreshTokenReducer(HandbookState previousState, SetRefreshTokenAction action)
         {
             _logService.Info("SetRefreshTokenReducer");

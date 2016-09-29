@@ -22,12 +22,12 @@ namespace MDHandbookApp.Forms.ViewModels
         public const string MainPageAbsUrl = "/MenuPage/NavPage/MainPage";
         public const string MainPageRelUrl = "NavPage/MainPage";
         public const string SetLicenceKeyPageAbsUrl = "/MenuPage/NavPage/SetLicenceKeyPage";
-        public const string LoginPageAbsUrl = "/MenuPage/NavPage/LoginPage";
+        public const string LoginPageAbsUrl = "/LoginPage";
         public const string UnauthorizedErrorPageRelUrl = "NavPage/UnauthorizedErrorPage";
         public const string SetLicenceKeyPageRelUrl = "NavPage/SetLicenceKeyPage";
         public const string PrivacyPageRelUrl = "NavPage/PrivacyPage";
         public const string OptionsPageRelUrl = "NavPage/OptionsPage";
-        public const string LoginPageRelUrl = "NavPage/LoginPage";
+        public const string LoginPageRelUrl = "/LoginPage";
         public const string LicenceErrorPageRelUrl = "NavPage/LicenceErrorPage";
         public const string AboutPageRelUrl = "NavPage/AboutPage";
         public const string BookpagePageAbsUrl = "/MenuPage/NavPage/BookpagePage";

@@ -50,10 +50,6 @@ namespace MDHandbookApp.Forms.Services
             var initialCurrentPostUpdateState = BlobCache.UserAccount.GetObject<PostUpdateState>("currentpostupdatestate").Catch(Observable.Return(AppState.CreateEmptyPostUpdateState())).Wait();
             var initialEventsState = EventsState.CreateEmpty();
 
-            initialCurrentState.HasLicensedError = false;
-            initialCurrentState.HasUnauthorizedError = false;
-            initialCurrentState.IsNetworkBusy = false;
-            
             var initialState = new AppState {
                 Books = initialBooks,
                 Fullpages = initialFullpages,

@@ -7,9 +7,12 @@
              Title="Set Licence Key">
   <StackLayout Margin="20">
     <Label FontSize="Medium" Text="Please enter your licence key." />
-    <Label Text="You are licenced." IsVisible="{Binding ShowLicencedMessage}" />
-    <Label Text="You are not licenced." IsVisible="{Binding EnableSetLicenceKeyButton}" />
-    <Label Text="Unable to authorize licence key. Please try again" IsVisible="{Binding ShowUnauthorizedMessage}" />
+    <Label Text="You are licenced. Please return to Main Page." IsVisible="{Binding ShowLicencedMessage}" />
+    <Label Text="You are not licenced. Please enter a Licence Key." IsVisible="{Binding ShowNotLicencedMessage}" />
+    <Label Text="Licence Key verfication successful. Please return to Main Page." IsVisible="{Binding ShowLicenceKeySuccessfulMessage}" />
+    <Label Text="Licence Key verification unsuccessful. Please check network connection and try again." IsVisible="{Binding ShowLicenceKeyNotSuccessfulMessage}" />
+    <Label Text="Unable to verify Licence Key. Please check network connection and try again." IsVisible="{Binding ShowNetworkDownMessage}" />
+    <ActivityIndicator IsRunning="{Binding ShowActivityIndicator}" IsVisible="True" />
     <Entry  Text="{Binding LicenceKeyString}" Placeholder="Licence Key" IsEnabled="{Binding EnableSetLicenceKeyButton}"/>
     <Button Text="Set Licence Key" Command="{Binding SetLicenceKey}" IsEnabled="{Binding EnableSetLicenceKeyButton}" />
     <Button Text="Return to MainPage" Command="{Binding NavigateToMainPage}" />

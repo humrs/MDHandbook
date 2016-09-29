@@ -36,7 +36,27 @@ namespace MDHandbookApp.Forms.ViewModels
         private IObservable<bool> islicenced;
         private IObservable<bool> isnetworkbusy;
 
-        
+        private IObservable<bool> showneedloginandlicence;
+        private IObservable<bool> shownotloggedin;
+        private IObservable<bool> shownotlicenced;
+        private IObservable<bool> enableloginbutton;
+        private IObservable<bool> enablesetlicencekeybutton;
+
+
+        private bool _enableLoginButton;
+        public bool EnableLoginButton
+        {
+            get { return _enableLoginButton; }
+            set { SetProperty(ref _enableLoginButton, value); }
+        }
+
+        private bool _enableSetLicenceKeyButton;
+        public bool EnableSetLicenceKeyButton
+        {
+            get { return _enableSetLicenceKeyButton; }
+            set { SetProperty(ref _enableSetLicenceKeyButton, value); }
+        }
+
         private bool _showActivityIndicator = false;
         public bool ShowActivityIndicator
         {
@@ -64,6 +84,7 @@ namespace MDHandbookApp.Forms.ViewModels
             get { return _showNeedLoginAndLicencedMessage; }
             set { SetProperty(ref _showNeedLoginAndLicencedMessage, value); }
         }
+
 
         private bool _showBookList = false;
         public bool ShowBookList
@@ -103,7 +124,7 @@ namespace MDHandbookApp.Forms.ViewModels
 
         private async Task navigateToLoginPage()
         {
-            await _navigationService.NavigateAsync(Constants.LoginPageAbsUrl);
+            await _navigationService.NavigateAsync(Constants.LoginPageAbsUrl, null, true, true);
         }
 
 
@@ -118,8 +139,22 @@ namespace MDHandbookApp.Forms.ViewModels
                 .Select(d => d.CurrentState.IsLicensed);
 
             isnetworkbusy = _reduxService.Store
-                .DistinctUntilChanged(state => new { state.CurrentState.IsNetworkBusy })
-                .Select(d => d.CurrentState.IsNetworkBusy);
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkBusy })
+                .Select(d => d.CurrentEventsState.IsNetworkBusy);
+
+            showneedloginandlicence = islicenced
+                .Select(x => !x);
+            
+            shownotloggedin = isloggedin
+                .Select(x => !x);
+
+            shownotlicenced = isloggedin
+                .CombineLatest(islicenced, (x, y) => x && !y);
+
+            enableloginbutton = shownotloggedin;
+
+            enablesetlicencekeybutton = shownotlicenced;
+
         }
 
         protected override void setupSubscriptions()
@@ -146,32 +181,41 @@ namespace MDHandbookApp.Forms.ViewModels
                         Handbooks = newlist;
                     });
 
-            isloggedin
+            shownotloggedin
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowNotLoggedInMessage = !x;
-                    });
+                .Subscribe(x => {
+                    ShowNotLoggedInMessage = x;
+                });
 
-            isloggedin
-                .CombineLatest(islicenced, (x, y) => x && !y)
+            shownotlicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowNotLicencedMessage = x;
-                    });
+                .Subscribe(x => {
+                    ShowNotLicencedMessage = x;
+                });
 
-            isloggedin
-                .CombineLatest(islicenced, (x, y) => x && y)
+            showneedloginandlicence
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(
-                    x => {
-                        ShowBookList = x;
-                        ShowNeedLoginAndLicencedMessage = !x;
-                    });
+                .Subscribe(x => {
+                    ShowBookList = !x;
+                    ShowNeedLoginAndLicencedMessage = x;
+                });
+
+            enableloginbutton
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    EnableLoginButton = x;
+                });
+
+            enablesetlicencekeybutton
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    EnableSetLicenceKeyButton = x;
+                });
 
             isnetworkbusy
                 .DistinctUntilChanged()

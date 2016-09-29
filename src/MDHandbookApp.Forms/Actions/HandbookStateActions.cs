@@ -50,14 +50,4 @@ namespace MDHandbookApp.Forms.Actions
         public string Token { get; set; }
     }
 
-
-    public class SetHasLicensedErrorAction : IAction { }
-    public class ClearHasLicensedErrorAction : IAction { }
-
-    public class SetHasUnauthorizedErrorAction : IAction { }
-    public class ClearHasUnauthorizedErrorAction : IAction { }
-
-    public class SetIsNetworkBusyAction : IAction { }
-    public class ClearIsNetworkBusyAction : IAction { }
-
 }

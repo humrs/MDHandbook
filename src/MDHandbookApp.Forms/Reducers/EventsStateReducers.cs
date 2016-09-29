@@ -40,7 +40,117 @@ namespace MDHandbookApp.Forms.Reducers
             if (action is ClearIsNetworkDownAction)
                 return clearIsNetworkDownReducer(previousState, (ClearIsNetworkDownAction)action);
 
+            if (action is SetIsNetworkBusyAction)
+                return setIsNetworkBusyReducer(previousState, (SetIsNetworkBusyAction) action);
+
+            if (action is ClearIsNetworkBusyAction)
+                return clearIsNetworkBusyReducer(previousState, (ClearIsNetworkBusyAction)action);
+        
+            if (action is SetLoginSuccessfulAction)
+                return setLoginSuccessfulReducer(previousState, (SetLoginSuccessfulAction)action);
+
+            if (action is SetLoginNotSuccessfulAction)
+                return setLoginNotSuccessfulReducer(previousState, (SetLoginNotSuccessfulAction) action);
+
+            if (action is ClearLoginSuccessfullAction)
+                return clearLoginSuccessfulReducer(previousState, (ClearLoginSuccessfullAction)action);
+
+            if (action is SetLicenceKeySuccessfulAction)
+                return setLicenceKeySuccessfulReducer(previousState, (SetLicenceKeySuccessfulAction)action);
+
+            if (action is SetLicenceKeyNotSuccessfulAction)
+                return setLicenceKeyNotSuccessfulReducer(previousState, (SetLicenceKeyNotSuccessfulAction) action);
+
+            if (action is ClearLicenceKeySuccessfulAction)
+                return clearLicenceKeySuccessfulReducer(previousState, (ClearLicenceKeySuccessfulAction) action);
+
+            if (action is SetUnauthorizedErrorAction)
+                return setUnauthorizedErrorReducer(previousState, (SetUnauthorizedErrorAction) action);
+
+            if (action is ClearUnauthorizedErrorAction)
+                return clearUnauthorizedErrorReducer(previousState, (ClearUnauthorizedErrorAction) action);
+
             return previousState;
+        }
+
+        private EventsState clearUnauthorizedErrorReducer(EventsState previousState, ClearUnauthorizedErrorAction action)
+        {
+            _logService.Info("ClearUnauthorizedErrorReducer");
+            EventsState newState = previousState.Clone();
+            newState.UnauthorizedError = false;
+            return newState;
+        }
+
+        private EventsState setUnauthorizedErrorReducer(EventsState previousState, SetUnauthorizedErrorAction action)
+        {
+            _logService.Info("SetUnauthorizedErrorReducer");
+            EventsState newState = previousState.Clone();
+            newState.UnauthorizedError = true;
+            return newState;
+        }
+
+        private EventsState clearLicenceKeySuccessfulReducer(EventsState previousState, ClearLicenceKeySuccessfulAction action)
+        {
+            _logService.Info("ClearLicenceKeySuccessfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LicenceKeySuccessful = null;
+            return newState;
+        }
+
+        private EventsState setLicenceKeyNotSuccessfulReducer(EventsState previousState, SetLicenceKeyNotSuccessfulAction action)
+        {
+            _logService.Info("SetLicenceKeyNotSuccessfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LicenceKeySuccessful = false;
+            return newState;
+        }
+
+        private EventsState setLicenceKeySuccessfulReducer(EventsState previousState, SetLicenceKeySuccessfulAction action)
+        {
+            _logService.Info("SetLicenceKeySuccessfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LicenceKeySuccessful = true;
+            return newState;
+        }
+
+        private EventsState clearIsNetworkBusyReducer(EventsState previousState, ClearIsNetworkBusyAction action)
+        {
+            _logService.Info("ClearIsNetworkBusyReducer");
+            EventsState newState = previousState.Clone();
+            newState.IsNetworkBusy = false;
+            return newState;
+        }
+
+        private EventsState setIsNetworkBusyReducer(EventsState previousState, SetIsNetworkBusyAction action)
+        {
+            _logService.Info("SetIsNetworkBusyReducer");
+            EventsState newState = previousState.Clone();
+            newState.IsNetworkBusy = true;
+            return newState;
+        }
+
+        private EventsState setLoginNotSuccessfulReducer(EventsState previousState, SetLoginNotSuccessfulAction action)
+        {
+            _logService.Info("SetLoginNotSuccessfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LoginSuccessful = false;
+            return newState;
+        }
+
+        private EventsState clearLoginSuccessfulReducer(EventsState previousState, ClearLoginSuccessfullAction action)
+        {
+            _logService.Info("ClearLoginSuccessfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LoginSuccessful = null;
+            return newState;
+        }
+
+        private EventsState setLoginSuccessfulReducer(EventsState previousState, SetLoginSuccessfulAction action)
+        {
+            _logService.Info("SetLoginSuccesfulReducer");
+            EventsState newState = previousState.Clone();
+            newState.LoginSuccessful = true;
+            return newState;
         }
 
         private EventsState clearIsNetworkDownReducer(EventsState previousState, ClearIsNetworkDownAction action)

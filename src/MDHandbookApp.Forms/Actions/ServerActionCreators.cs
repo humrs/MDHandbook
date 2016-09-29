@@ -35,15 +35,18 @@ namespace MDHandbookApp.Forms.Actions
         private IReduxService _reduxService;
         private IMobileService _mobileService;
         private ILogService _logService;
+        private ILogStoreService _logStoreService;
 
         public ServerActionCreators(
             ILogService logService,
             IReduxService reduxService,
-            IMobileService mobileService)
+            IMobileService mobileService,
+            ILogStoreService logStoreService)
         {
             _logService = logService;
             _reduxService = reduxService;
             _mobileService = mobileService;
+            _logStoreService = logStoreService;
         }
 
         private bool httpClientAvailable = true;
@@ -183,11 +186,13 @@ namespace MDHandbookApp.Forms.Actions
                     AuthToken = token
                 });
                 _mobileService.SetAzureUserCredentials(userId, token);
+                dispatch(new SetLoginSuccessfulAction());
 
                 await doVerifyLicenceKey(dispatch, getState, getState().CurrentState.LicenceKey);
             }
             else
             {
+                dispatch(new SetLoginNotSuccessfulAction());
                 dispatch(new LogoutAction());
             }
 
@@ -220,11 +225,14 @@ namespace MDHandbookApp.Forms.Actions
 
                 if (success)
                 {
+                    dispatch(new SetLicenceKeySuccessfulAction());
+                    dispatch(new SetLicenceKeyAction { LicenceKey = candidateLicenceKey });
                     dispatch(new SetLicensedAction());
                 }
                 else
                 {
-                    dispatch(new SetHasLicensedErrorAction());
+                    dispatch(new SetLicenceKeyNotSuccessfulAction());
+                    dispatch(new ClearLicenceKeyAction());
                 }
 
             }
@@ -236,15 +244,15 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
-                    dispatch(new SetHasLicensedErrorAction());
+                    dispatch(new SetLicenceKeyNotSuccessfulAction());
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
-                    dispatch(new SetHasLicensedErrorAction());
+                    dispatch(new SetLicenceKeyNotSuccessfulAction());
                     if (ex.InnerException != null)
                     {
                     }
@@ -252,8 +260,10 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetHasLicensedErrorAction());
+                    dispatch(new SetLicenceKeyNotSuccessfulAction());
                 }
+                
+                dispatch(new ClearLicenceKeyAction());
             }
 
             dispatch(new ClearIsNetworkBusyAction());
@@ -285,7 +295,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
 
             }
@@ -298,15 +308,15 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.ActionFailure)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                     if (ex.InnerException != null)
                     {
                         //Log inner Exception
@@ -314,7 +324,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                     //Log Unknown Exception
                 }
             }
@@ -330,7 +340,10 @@ namespace MDHandbookApp.Forms.Actions
 
         private async Task doResetLicenceKey(Dispatcher dispatch, Func<AppState> getState)
         {
-            await Task.Run(() => { dispatch(new ClearLicensedAction()); });
+            await Task.Run(() => {
+                dispatch(new ClearLicenceKeyAction());
+                dispatch(new ClearLicensedAction());
+            });
         }
 
 
@@ -365,7 +378,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -403,7 +416,7 @@ namespace MDHandbookApp.Forms.Actions
 
             bool success = false;
 
-            List<AppLogItemMessage> items = new List<AppLogItemMessage>(); // TODO: _logStoreService.LogStore.ToList();
+            List<AppLogItemMessage> items = _logStoreService.LogStore.ToList();
 
             try
             {
@@ -411,7 +424,7 @@ namespace MDHandbookApp.Forms.Actions
 
                 if (success)
                 {
-                    //_logStoreService.Clear();
+                    _logStoreService.Clear();
                 }
             }
             catch (Exception ex)
@@ -426,7 +439,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -483,7 +496,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {
@@ -536,7 +549,7 @@ namespace MDHandbookApp.Forms.Actions
                 }
                 else if (ex is ServerExceptions.Unauthorized)
                 {
-                    dispatch(new SetHasUnauthorizedErrorAction());
+                    dispatch(new SetUnauthorizedErrorAction());
                 }
                 else if (ex is ServerExceptions.UnknownFailure)
                 {

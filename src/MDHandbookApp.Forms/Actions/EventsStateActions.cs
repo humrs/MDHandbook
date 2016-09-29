@@ -26,4 +26,25 @@ namespace MDHandbookApp.Forms.Actions
     }
 
     public class ClearIsNetworkDownAction : IAction { }
+
+    public class SetIsNetworkBusyAction : IAction { }
+
+    public class ClearIsNetworkBusyAction : IAction { }
+
+    public class SetLoginSuccessfulAction : IAction { }
+
+    public class SetLoginNotSuccessfulAction : IAction { }
+
+    public class ClearLoginSuccessfullAction : IAction { }
+
+    public class SetLicenceKeySuccessfulAction : IAction { }
+
+    public class SetLicenceKeyNotSuccessfulAction : IAction { }
+
+    public class ClearLicenceKeySuccessfulAction : IAction { }
+
+    public class SetUnauthorizedErrorAction : IAction { }
+
+    public class ClearUnauthorizedErrorAction : IAction { }
+
 }

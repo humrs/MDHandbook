@@ -36,6 +36,7 @@ namespace MDHandbookApp.Forms.ViewModels
         public DelegateCommand RefreshContents { get; set; }
         
         private IObservable<bool> isloggedin;
+        private IObservable<bool> islicencekeyset;
         private IObservable<bool> islicenced;
         
         private bool _showLogout = false;
@@ -93,6 +94,10 @@ namespace MDHandbookApp.Forms.ViewModels
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
                 .Select(d => d.CurrentState.IsLoggedIn);
 
+            islicencekeyset = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicenceKeySet })
+                .Select(d => d.CurrentState.IsLicenceKeySet);
+
             islicenced = _reduxService.Store
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
                 .Select(d => d.CurrentState.IsLicensed);
@@ -108,13 +113,20 @@ namespace MDHandbookApp.Forms.ViewModels
                         ShowLogout = x;
                     });
 
+            islicencekeyset
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(
+                    x => {
+                        ShowResetLicenceKey = x;
+                    });
+
             islicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(
                     x => {
                         ShowRefreshContents = x;
-                        ShowResetLicenceKey = x;
                     });
 
         }

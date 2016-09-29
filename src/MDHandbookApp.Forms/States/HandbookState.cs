@@ -34,11 +34,6 @@ namespace MDHandbookApp.Forms.States
         public string UserId { get; set; }
         public string AuthToken { get; set; }
 
-        public bool HasLicensedError { get; set; }
-        public bool HasUnauthorizedError { get; set; }
-
-        public bool IsNetworkBusy { get; set; }
-
         
         public HandbookState()
         {
@@ -79,10 +74,6 @@ namespace MDHandbookApp.Forms.States
                 this.AuthToken = new string(buffer);
             }
 
-            this.HasLicensedError = old.HasLicensedError;
-            this.HasUnauthorizedError = old.HasUnauthorizedError;
-
-            this.IsNetworkBusy = old.IsNetworkBusy;
         }
 
 
@@ -107,12 +98,7 @@ namespace MDHandbookApp.Forms.States
 
                 IsUserSet = false,
                 UserId = "",
-                AuthToken = "",
-
-                HasLicensedError = false,
-                HasUnauthorizedError = false,
-
-                IsNetworkBusy = false
+                AuthToken = ""
             };
         }
     }

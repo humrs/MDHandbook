@@ -76,7 +76,7 @@
     <Compile Include="Services\ServerExceptions.cs" />
     <Compile Include="States\AppState.cs" />
     <Compile Include="States\Book.cs" />
-    <Compile Include="States\EventState.cs" />
+    <Compile Include="States\EventsState.cs" />
     <Compile Include="States\Fullpage.cs" />
     <Compile Include="States\HandbookState.cs" />
     <Compile Include="States\PostUpdateState.cs" />
@@ -85,8 +85,6 @@
     <Compile Include="ViewModels\Constants.cs" />
     <Compile Include="ViewModels\BookpagePageViewModel.cs" />
     <Compile Include="ViewModels\SetLicenceKeyPageViewModel.cs" />
-    <Compile Include="ViewModels\UnauthorizedErrorPageViewModel.cs" />
-    <Compile Include="ViewModels\LicenceErrorPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MenuPageViewModel.cs" />
@@ -97,9 +95,6 @@
     </Compile>
     <Compile Include="Views\BookpagePage.xaml.cs">
       <DependentUpon>BookpagePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LicenceErrorPage.xaml.cs">
-      <DependentUpon>LicenceErrorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
@@ -118,9 +113,6 @@
     </Compile>
     <Compile Include="Views\SetLicenceKeyPage.xaml.cs">
       <DependentUpon>SetLicenceKeyPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UnauthorizedErrorPage.xaml.cs">
-      <DependentUpon>UnauthorizedErrorPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -284,12 +276,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\LicenceErrorPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Views\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -315,12 +301,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\SetLicenceKeyPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Views\UnauthorizedErrorPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

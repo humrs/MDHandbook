@@ -33,8 +33,26 @@ namespace MDHandbookApp.Forms.ViewModels
         public DelegateCommand SetLicenceKey { get; set; }
         public DelegateCommand NavigateToMainPage { get; set; }
 
+        private IObservable<bool> isloggedin;
         private IObservable<bool> islicenced;
-        private IObservable<bool> isunauthorized;
+        private IObservable<bool> islicencekeyset;
+        private IObservable<bool> isnetworkdown;
+        private IObservable<bool?> licencekeysuccessful;
+        private IObservable<bool> isnetworkbusy;
+
+        private IObservable<bool> showlicenced;
+        private IObservable<bool> shownotlicenced;
+        private IObservable<bool> showlicencekeysuccessful;
+        private IObservable<bool> showlicencekeynotsuccessful;
+        private IObservable<bool> shownetworkdown;
+        private IObservable<bool> enablesetlicencekeybutton;
+
+        private bool _showActivityIndicator = false;
+        public bool ShowActivityIndicator
+        {
+            get { return _showActivityIndicator; }
+            set { SetProperty(ref _showActivityIndicator, value); }
+        }
 
         private bool _enableSetLicenceKeyButton;
         public bool EnableSetLicenceKeyButton
@@ -50,11 +68,32 @@ namespace MDHandbookApp.Forms.ViewModels
             set { SetProperty(ref _showLicencedMessage, value); }
         }
 
-        private bool _showUnauthorizedMessage;
-        public bool ShowUnauthorizedMessage
+        private bool _showNotLicencedMessage;
+        public bool ShowNotLicencedMessage
         {
-            get { return _showUnauthorizedMessage; }
-            set { SetProperty(ref _showUnauthorizedMessage, value); }
+            get { return _showNotLicencedMessage; }
+            set { SetProperty(ref _showNotLicencedMessage, value); }
+        }
+
+        private bool _showLicenceKeySuccessfulMessage;
+        public bool ShowLicenceKeySuccessfulMessage
+        {
+            get { return _showLicenceKeySuccessfulMessage; }
+            set { SetProperty(ref _showLicenceKeySuccessfulMessage, value); }
+        }
+
+        private bool _showLicenceKeyNotSuccessfulMessage;
+        public bool ShowLicenceKeyNotSuccessfulMessage
+        {
+            get { return _showLicenceKeyNotSuccessfulMessage; }
+            set { SetProperty(ref _showLicenceKeyNotSuccessfulMessage, value); }
+        }
+
+        private bool _showNetworkDownMessage;
+        public bool ShowNetworkDownMessage
+        {
+            get { return _showNetworkDownMessage; }
+            set { SetProperty(ref _showNetworkDownMessage, value); }
         }
 
         private string _licenceKeyString;
@@ -81,37 +120,116 @@ namespace MDHandbookApp.Forms.ViewModels
 
         protected override void setupObservables()
         {
+            isloggedin = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLoggedIn })
+                .Select(d => d.CurrentState.IsLoggedIn);
+
             islicenced = _reduxService.Store
                 .DistinctUntilChanged(state => new { state.CurrentState.IsLicensed })
                 .Select(d => d.CurrentState.IsLicensed);
 
-            isunauthorized = _reduxService.Store
-                .DistinctUntilChanged(state => new { state.CurrentState.HasUnauthorizedError })
-                .Select(d => d.CurrentState.HasUnauthorizedError);
+            islicencekeyset = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentState.IsLicenceKeySet })
+                .Select(d => d.CurrentState.IsLicenceKeySet);
+
+            licencekeysuccessful = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.LicenceKeySuccessful })
+                .Select(d => d.CurrentEventsState.LicenceKeySuccessful);
+
+            isnetworkdown = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkDown })
+                .Select(d => d.CurrentEventsState.IsNetworkDown);
+
+            isnetworkbusy = _reduxService.Store
+                .DistinctUntilChanged(state => new { state.CurrentEventsState.IsNetworkBusy })
+                .Select(d => d.CurrentEventsState.IsNetworkBusy);
+
+            showlicenced = isloggedin
+                .CombineLatest(islicenced, (x, y) => x && y)
+                .CombineLatest(licencekeysuccessful, (x, y) => x && y == null)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            shownotlicenced = isloggedin
+                .CombineLatest(islicencekeyset, (x, y) => x && !y)
+                .CombineLatest(islicenced, (x, y) => x && !y)
+                .CombineLatest(licencekeysuccessful, (x, y) => x && y == null)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            showlicencekeysuccessful = isloggedin
+                .CombineLatest(islicenced, (x, y) => x && y)
+                .CombineLatest(licencekeysuccessful, (x, y) => x && y != null && (bool) y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            showlicencekeynotsuccessful = isloggedin
+                .CombineLatest(islicenced, (x, y) => x && !y)
+                .CombineLatest(licencekeysuccessful, (x, y) => x && y != null && (bool) !y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+
+            shownetworkdown = isnetworkdown;
+
+            enablesetlicencekeybutton = islicenced
+                .CombineLatest(isnetworkbusy, (x, y) => !x && !y)
+                .CombineLatest(isnetworkdown, (x, y) => x && !y);
+            
         }
 
         protected override void setupSubscriptions()
         {
-            islicenced
-                .DistinctUntilChanged()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x =>
-                {
-                    EnableSetLicenceKeyButton = !x;
-                    ShowLicencedMessage = x;
-                });
-
-            isunauthorized
+            showlicenced
                 .DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => {
-                    ShowUnauthorizedMessage = x;
+                    ShowLicencedMessage = x;
+                });
+
+            shownotlicenced
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowNotLicencedMessage = x;
+                });
+
+            showlicencekeysuccessful
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowLicenceKeySuccessfulMessage = x;
+                });
+
+            showlicencekeynotsuccessful
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowLicenceKeyNotSuccessfulMessage = x;
+                });
+
+            shownetworkdown
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowNetworkDownMessage = x;
+                });
+
+            enablesetlicencekeybutton
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    EnableSetLicenceKeyButton = x;
+                });
+
+            isnetworkbusy
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => {
+                    ShowActivityIndicator = x;
                 });
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
+
+            _reduxService.Store.Dispatch(new ClearLicenceKeySuccessfulAction());
 
             setupObservables();
 

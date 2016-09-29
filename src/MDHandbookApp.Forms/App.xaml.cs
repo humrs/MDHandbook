@@ -15,29 +15,19 @@
 //
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MDHandbookApp.Forms.Services;
-using Microsoft.WindowsAzure.MobileServices;
-using Microsoft.Practices.Unity;
-using Prism.Logging;
-using Prism.Unity;
-using Prism.Common;
-using Prism.Navigation;
-using Prism.Modularity;
-using Prism.Events;
-using Prism.Services;
-using Prism.Unity.Extensions;
-using Prism.Unity.Navigation;
-using Prism.Unity.Modularity;
-using MDHandbookApp.Forms.Reducers;
-using MDHandbookApp.Forms.Actions;
-using MDHandbookApp.Forms.Views;
-using System.Reactive.Linq;
-using MDHandbookApp.Forms.Utilities;
-using JWT;
 using System.Collections.Generic;
-using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using JWT;
+using MDHandbookApp.Forms.Actions;
+using MDHandbookApp.Forms.Reducers;
+using MDHandbookApp.Forms.Services;
+using MDHandbookApp.Forms.Utilities;
+using MDHandbookApp.Forms.Views;
+using Microsoft.Practices.Unity;
+using Microsoft.WindowsAzure.MobileServices;
+using Prism.Unity;
+
 
 namespace MDHandbookApp.Forms
 {
@@ -49,12 +39,14 @@ namespace MDHandbookApp.Forms
     public partial class App : PrismApplication
     {
 #if DEBUG
-        private static TimeSpan updateInterval = TimeSpan.FromSeconds(1);
-        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(6);
+        private static TimeSpan updateInterval = TimeSpan.FromSeconds(60);
+        private static TimeSpan refreshTokenInterval = TimeSpan.FromSeconds(120);
+        private static TimeSpan clearNetworkInterval = TimeSpan.FromSeconds(15);
         private const int MinimumRefreshTokenPeriodInDays = 1;
 #else
         private static TimeSpan updateInterval = TimeSpan.FromHours(6);
         private static TimeSpan refreshTokenInterval = TimeSpan.FromHours(24);
+        private static TimeSpan clearNetworkInterval = TimeSpan.FromMinutes(15);
         private const int MinimumRefreshTokenPeriodInDays = 15;
 #endif
 
@@ -139,9 +131,13 @@ namespace MDHandbookApp.Forms
                     });
 
             Observable
-                .Interval(TimeSpan.FromSeconds(20))
+                .Interval(clearNetworkInterval)
                 .Subscribe(
-                    x => _reduxService.Store.Dispatch(new ClearIsNetworkDownAction()));
+                    x => {
+                        if(_reduxService.Store.GetState().CurrentEventsState.IsNetworkDown)
+                            _reduxService.Store.Dispatch(new ClearIsNetworkDownAction());
+
+                    });
         }
 
         private void setupObservables()
@@ -276,6 +272,5 @@ namespace MDHandbookApp.Forms
             var duration = dtDateTime.Subtract(DateTimeOffset.UtcNow);
             return (duration.TotalDays < MinimumRefreshTokenPeriodInDays);
         }
-
     }
 }

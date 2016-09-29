@@ -22,6 +22,13 @@ namespace MDHandbookApp.Forms.States
     public class EventsState
     {
         public bool IsNetworkDown { get; set; }
+        public bool IsNetworkBusy { get; set; }
+
+        public bool? LoginSuccessful { get; set; }
+        public bool? LicenceKeySuccessful { get; set; }
+
+        public bool UnauthorizedError { get; set; }
+
         public DateTimeOffset LastNetworkAttempt { get; set; }
 
 
@@ -33,7 +40,15 @@ namespace MDHandbookApp.Forms.States
         protected EventsState(EventsState old)
         {
             this.IsNetworkDown = old.IsNetworkDown;
+            this.IsNetworkBusy = old.IsNetworkBusy;
+
+            this.LoginSuccessful = old.LoginSuccessful;
+            this.LicenceKeySuccessful = old.LicenceKeySuccessful;
+
+            this.UnauthorizedError = old.UnauthorizedError;
+
             this.LastNetworkAttempt = old.LastNetworkAttempt;
+
         }
 
 
@@ -47,6 +62,10 @@ namespace MDHandbookApp.Forms.States
         {
             return new EventsState {
                 IsNetworkDown = false,
+                IsNetworkBusy = false,
+                LoginSuccessful = null,
+                LicenceKeySuccessful = null,
+                UnauthorizedError = false,
                 LastNetworkAttempt = new System.DateTimeOffset(1970, 1, 1, 0, 0, 0, new System.TimeSpan(-5, 0, 0)),
             };
         }
