@@ -80,27 +80,20 @@ namespace MDHandbookApp.Forms.Reducers
 
             if (action is RemoveLocalPostUpdatesDataAction)
             {
-                return RemoveLocalPostUpdatesDataReducer(previousState, (RemoveLocalPostUpdatesDataAction)action);
+                return removeLocalPostUpdatesDataReducer(previousState, (RemoveLocalPostUpdatesDataAction) action);
             }
 
             return previousState;
         }
 
-        private PostUpdateState RemoveLocalPostUpdatesDataReducer(PostUpdateState previousState, RemoveLocalPostUpdatesDataAction action)
+        private PostUpdateState removeLocalPostUpdatesDataReducer(PostUpdateState previousState, RemoveLocalPostUpdatesDataAction action)
         {
-            var ujm = new UpdateJsonMessage {
-                AddBookItemIds = previousState.AddedBookIds.ToList(),
-                DeleteBookItemIds = previousState.DeletedBooksIds.ToList(),
-                AddFullpageItemIds = previousState.AddedFullpagesIds.ToList(),
-                DeleteFullpageItemIds = previousState.DeletedFullpagesIds.ToList()
-            };
-            _logService.Info($"{JsonConvert.SerializeObject(ujm)}");
-
+            _logService.Info("RemoveLocalPostUpdatesDataReducer");
             PostUpdateState newState = previousState.Clone();
-            newState.AddedBookIds = previousState.AddedBookIds.RemoveRange(action.Data.AddBookItemIds);
-            newState.DeletedBooksIds = previousState.DeletedBooksIds.RemoveRange(action.Data.DeleteBookItemIds);
-            newState.AddedFullpagesIds = previousState.AddedFullpagesIds.RemoveRange(action.Data.AddFullpageItemIds);
-            newState.DeletedFullpagesIds = previousState.DeletedFullpagesIds.RemoveRange(action.Data.DeleteFullpageItemIds);
+            newState.AddedBookIds = newState.AddedBookIds.RemoveRange(action.Data.AddBookItemIds);
+            newState.DeletedBooksIds = newState.DeletedBooksIds.RemoveRange(action.Data.DeleteBookItemIds);
+            newState.AddedFullpagesIds = newState.AddedFullpagesIds.RemoveRange(action.Data.AddFullpageItemIds);
+            newState.DeletedFullpagesIds = newState.DeletedFullpagesIds.RemoveRange(action.Data.DeleteFullpageItemIds);
             return newState;
         }
 

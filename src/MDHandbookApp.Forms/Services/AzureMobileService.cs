@@ -142,7 +142,7 @@ namespace MDHandbookApp.Forms.Services
             {
                 if (response == null)
                 {
-                    _logService.InfoException("ResetUdpates response is null", ex);
+                    _logService.InfoException("ResetUpdates response is null", ex);
                     throw new ServerExceptions.NetworkFailure();
                 }
                 else
