@@ -5,8 +5,8 @@
                   prism:ViewModelLocator.AutowireViewModel="True"
                   x:Class="MDHandbookApp.Forms.Views.MenuPage">
   <MasterDetailPage.Master>
-    <ContentPage Title="Default" Padding="10">
-      <StackLayout>
+    <ContentPage Title="Menu" Padding="10">
+      <StackLayout Padding="0,20,0,0">
         <Label Text="Menu" />
         <Button Text="About"            Command="{Binding NavigateToAboutPage}" />
         <Button Text="Privacy"          Command="{Binding NavigateToPrivacyPage}" />
