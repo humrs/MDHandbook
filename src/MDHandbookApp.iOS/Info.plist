@@ -10,6 +10,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
@@ -56,6 +58,8 @@
 		</dict>
 	</dict>
 	<key>UIMainStoryboardFile~ipad</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
 	<string>LaunchScreen</string>
 </dict>
 </plist>
