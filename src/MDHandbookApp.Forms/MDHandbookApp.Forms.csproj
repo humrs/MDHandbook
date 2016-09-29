@@ -59,7 +59,6 @@
     <Compile Include="Reducers\PostUpdateStateReducers.cs" />
     <Compile Include="Services\AzureMobileService.cs" />
     <Compile Include="Services\FullLogger.cs" />
-    <Compile Include="Services\CustomDebugLogger.cs" />
     <Compile Include="Services\FullDebugLogService.cs" />
     <Compile Include="Services\ILogService.cs" />
     <Compile Include="Services\ILogStoreService.cs" />
