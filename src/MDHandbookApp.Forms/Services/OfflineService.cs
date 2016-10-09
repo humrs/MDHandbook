@@ -62,6 +62,12 @@ namespace MDHandbookApp.Forms.Services
             return initialState;
         }
 
+        public async Task SaveHandbookState(HandbookState state)
+        {
+            await BlobCache.UserAccount.InsertObject("state", state);
+            await BlobCache.UserAccount.Flush();
+        }
+
         public async Task SaveAppState(AppState state)
         {
             var currentHandbookState = state.CurrentState.Clone();

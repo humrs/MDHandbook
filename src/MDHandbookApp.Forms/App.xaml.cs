@@ -62,6 +62,7 @@ namespace MDHandbookApp.Forms
         private IObservable<bool> isnetworkdown;
         private IObservable<int>  unauthorizedcount;
         private IObservable<bool> needsupdate;
+        private IObservable<bool> doupdate;
 
 
         public static IAuthenticate Authenticator { get; private set; }
@@ -149,12 +150,32 @@ namespace MDHandbookApp.Forms
                 .Interval(clearNetworkInterval)
                 .Subscribe(
                     x => {
-                        if(_reduxService.Store.GetState().CurrentEventsState.IsNetworkDown)
+                        if (_reduxService.Store.GetState().CurrentEventsState.IsNetworkDown)
                             _reduxService.Store.Dispatch(new ClearIsNetworkDownAction());
 
                     });
 
-            needsupdate
+            isloggedin
+                .Throttle(throttleTime)
+                .DistinctUntilChanged()
+                .Subscribe(x => {
+                    if(x)
+                    {
+                        updateOfflineHandbookState();
+                    }
+                });
+
+            islicenced
+                .Throttle(throttleTime)
+                .DistinctUntilChanged()
+                .Subscribe(x => {
+                    if(x)
+                    {
+                        updateOfflineHandbookState();
+                    }
+                });
+
+            doupdate
                 .Throttle(throttleTime)
                 .DistinctUntilChanged()
                 .Subscribe(x => {
@@ -163,6 +184,14 @@ namespace MDHandbookApp.Forms
                         checkUpdates();
                     }
                 });
+        }
+
+        private void updateOfflineHandbookState()
+        {
+            var _offlineService = Container.Resolve<IOfflineService>();
+            var _reduxService = Container.Resolve<IReduxService>();
+
+            _offlineService.SaveHandbookState(_reduxService.Store.GetState().CurrentState);
         }
 
         private void setupObservables()
@@ -197,6 +226,10 @@ namespace MDHandbookApp.Forms
             unauthorizedcount = _reduxService.Store
                 .DistinctUntilChanged(state => new { state.CurrentEventsState.UnauthorizedCount })
                 .Select(d => d.CurrentEventsState.UnauthorizedCount);
+
+            doupdate = needsupdate
+                .CombineLatest(isloggedin, (x, y) => x && y)
+                .CombineLatest(islicenced, (x, y) => x && y);
         }
 
         private void setupMobileUser()
@@ -277,12 +310,16 @@ namespace MDHandbookApp.Forms
         {
             var _reduxService = Container.Resolve<IReduxService>();
             var _serverActionCreators = Container.Resolve<IServerActionCreators>();
+            var _logService = Container.Resolve<ILogService>();
+
 
             if (_reduxService.Store.GetState().CurrentState.IsLicensed)
             {
                 _reduxService.Store.Dispatch(_serverActionCreators.FullUpdateAction());
+                _reduxService.Store.Dispatch(new ClearNeedsUpdateAction());
+                _logService.Info("checking Updates");
             }
-            _reduxService.Store.Dispatch(new ClearNeedsUpdateAction());
+
         }
 
         private async Task refreshToken()
