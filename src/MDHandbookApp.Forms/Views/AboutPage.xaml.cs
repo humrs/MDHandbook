@@ -34,7 +34,7 @@ namespace MDHandbookApp.Forms.Views
             githubLink.GestureRecognizers.Add(
                 new TapGestureRecognizer() {
                     Command = new Command(() => {
-                        Device.OpenUri(new Uri("https://github.com/humrs/MDHandbook/"));
+                        Device.OpenUri(new Uri("https://github.com/rstanleyhum/MDHandbook/"));
                     })
                 });
         }
